@@ -1,14 +1,16 @@
-package sys.diag.car;
+package sys.diag.car.repository;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sys.diag.car.DAO.DataBaseHelper;
+import sys.diag.car.models.Car;
 
 public class CarRepository {
     private static CarRepository instanse;

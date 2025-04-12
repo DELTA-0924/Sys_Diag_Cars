@@ -1,4 +1,4 @@
-package sys.diag.car;
+package sys.diag.car.activity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -13,13 +13,16 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import sys.diag.car.repository.CarRepository;
+import sys.diag.car.adapter.CardAdapter;
+import sys.diag.car.DAO.DataBaseHelper;
+import sys.diag.car.common.OverlapPageTransformer;
+import sys.diag.car.R;
+import sys.diag.car.models.Car;
 
 public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter blueToothAdapter=BluetoothAdapter.getDefaultAdapter();

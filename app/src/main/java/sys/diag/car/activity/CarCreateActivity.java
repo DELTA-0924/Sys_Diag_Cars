@@ -1,4 +1,4 @@
-package sys.diag.car;
+package sys.diag.car.activity;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -18,15 +18,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
+
+import sys.diag.car.repository.CarRepository;
+import sys.diag.car.R;
+import sys.diag.car.models.Car;
 
 public class CarCreateActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;

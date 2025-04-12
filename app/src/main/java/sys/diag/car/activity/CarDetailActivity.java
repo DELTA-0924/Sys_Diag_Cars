@@ -1,4 +1,4 @@
-package sys.diag.car;
+package sys.diag.car.activity;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
+
+import sys.diag.car.repository.CarRepository;
+import sys.diag.car.R;
+import sys.diag.car.models.Car;
 
 public class CarDetailActivity extends AppCompatActivity {
     CarRepository carRepository;

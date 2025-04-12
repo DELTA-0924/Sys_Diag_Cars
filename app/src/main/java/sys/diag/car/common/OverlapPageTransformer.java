@@ -1,4 +1,4 @@
-package sys.diag.car;
+package sys.diag.car.common;
 
 import android.view.View;
 

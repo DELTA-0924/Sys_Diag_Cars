@@ -1,19 +1,20 @@
-package sys.diag.car;
+package sys.diag.car.adapter;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
-import java.io.File;
 import java.util.List;
 import com.squareup.picasso.Picasso;
+
+import sys.diag.car.R;
+import sys.diag.car.models.Car;
+
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     private List<Car> cardList;

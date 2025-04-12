@@ -1,4 +1,4 @@
-package sys.diag.car;
+package sys.diag.car.models;
 public class Car {
     private long id;
     private String markCar;
