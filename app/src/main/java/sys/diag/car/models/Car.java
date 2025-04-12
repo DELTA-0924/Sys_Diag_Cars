@@ -25,7 +25,7 @@ public class Car {
     }
 
     public String getMarkCar() {
-        return markCar+modelCar;
+        return markCar+" "+modelCar;
     }
 
     public void setMarkCar(String markCar) {

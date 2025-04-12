@@ -7,4 +7,7 @@
     <color name="toxic_blue">#005796</color>
     <color name="gentle_blue">#879EEA</color>
     <color name="light_gray">#D9D9D9</color>
+    <color name="main_color">#252B45</color>
+    <color name="dark_blue">#414863</color>
+    <color name="red">#D74342</color>
 </resources>
