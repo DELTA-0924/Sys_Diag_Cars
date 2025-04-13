@@ -71,9 +71,7 @@ public class MainActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     adapter.setCardList(carRepository.getCars());
-
                 }
-
             });
 
 

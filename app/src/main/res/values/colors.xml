@@ -2,12 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="custom_blue">#153F8D</color>
-    <color name="light_blue">#518BF8</color>
-    <color name="toxic_blue">#005796</color>
-    <color name="gentle_blue">#879EEA</color>
-    <color name="light_gray">#D9D9D9</color>
-    <color name="main_color">#252B45</color>
-    <color name="dark_blue">#414863</color>
-    <color name="red">#D74342</color>
+    <color name="main_background">#1919b</color>
+    <color name="pink">#e45eb0</color>
+    <color name="green">#34e3c4</color>
 </resources>
