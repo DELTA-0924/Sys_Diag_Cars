@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/bg_color_gradient"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="42sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="128dp"
+                android:text="Log In"
+                android:textStyle="bold"
+                />
+
+            <EditText
+                android:id="@+id/editTextName"
+                android:layout_width="match_parent"
+                android:layout_marginTop="128dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:ems="10"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:hint="user name"
+                android:textColorHint="@color/white"
+                android:textSize="25sp"
+                android:background="@drawable/bg_btn_login"/>
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_marginTop="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textColorHint="@color/white"
+                android:textSize="25sp"
+                android:background="@drawable/bg_btn_login"
+                android:hint="passwrod" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Forget your password?"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="128dp"
+                style="@android:style/Widget.Button"
+                android:background="@drawable/bg_btn_login"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:text="Button" />
+
+            <TextView
+                android:id="@+id/tvMessage1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I'm newer need an account"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:id="@+id/tvMessage2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Register this"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
