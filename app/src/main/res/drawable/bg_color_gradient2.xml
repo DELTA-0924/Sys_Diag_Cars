@@ -11,6 +11,7 @@
             android:gradientRadius="100%p"
             android:type="radial"
             />
+        <corners android:topLeftRadius="20dp" android:topRightRadius="20dp"/>
     </shape>
 </item>
     <item>
@@ -24,7 +25,9 @@
                 android:gradientRadius="100%p"
                 android:type="radial"
                 />
+            <corners android:topLeftRadius="20dp" android:topRightRadius="20dp"/>
         </shape>
+
     </item>
     <item>
         <shape>
@@ -37,6 +40,8 @@
                 android:gradientRadius="100%p"
                 android:type="radial"
                 />
+            <corners android:topLeftRadius="20dp" android:topRightRadius="20dp"/>
         </shape>
+
     </item>
 </layer-list>
