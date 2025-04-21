@@ -31,7 +31,7 @@ import sys.diag.car.models.Car;
 
 public class CarCreateActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    ImageButton btnBack;
+    Button btnBack;
     Button btnCreate;
     CarRepository carRepository;
     EditText markCar,modelCar,yearCar;
@@ -41,12 +41,12 @@ public class CarCreateActivity extends AppCompatActivity {
     protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         carRepository=CarRepository.getInstanse(getApplicationContext());
-        setContentView(R.layout.activity_create_profile);
+        setContentView(R.layout.activity_create_car);
         btnBack=findViewById(R.id.btnBack);
         btnCreate=findViewById(R.id.btnCreate);
-        markCar=findViewById(R.id.editTextBrand);
-        modelCar=findViewById(R.id.editTextModel);
-        yearCar=findViewById(R.id.editTextYear);
+        markCar=findViewById(R.id.etName);
+        modelCar=findViewById(R.id.etModel);
+        yearCar=findViewById(R.id.etYearRelease);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

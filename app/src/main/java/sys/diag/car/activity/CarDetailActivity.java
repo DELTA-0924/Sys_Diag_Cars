@@ -2,6 +2,8 @@ package sys.diag.car.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import sys.diag.car.models.Car;
 
 public class CarDetailActivity extends AppCompatActivity {
     CarRepository carRepository;
+    Button btnBack;
     TextView tvMarkCar,tvYearCar,tvIssueBroken;
     private final String NO_PREDICTED="Не диагностирован";
     ImageView ivCar;
@@ -27,7 +30,14 @@ public class CarDetailActivity extends AppCompatActivity {
         tvMarkCar = findViewById(R.id.tvMarkCarRes);
         tvYearCar = findViewById(R.id.tvYearReleaseRes);
         tvIssueBroken = findViewById(R.id.tvIssueBrokenRes);
-        ivCar = findViewById(R.id.ivCar);
+        btnBack=findViewById(R.id.btnBackDetail);
+        ivCar = findViewById(R.id.ivCarDetail);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         if (getIntent() != null && getIntent().hasExtra("selectedCar")) {
             Car selectedCar=carRepository.getCarById(getIntent().getLongExtra("selectedCar",1));
             tvMarkCar.setText(selectedCar.getMarkCar());
@@ -48,5 +58,9 @@ public class CarDetailActivity extends AppCompatActivity {
                         .into(ivCar);
             }
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

@@ -15,7 +15,7 @@
     <item android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
         <shape android:shape="rectangle">
 
-            <solid android:color="#19191b "/>
+            <solid android:color="@color/dark_gray"/>
         </shape>
     </item>
 </layer-list>

@@ -2,4 +2,5 @@
     <string name="app_name">SystemDiagnosticCar</string>
     <string name="bluetooth_button">tern on bluetooth module </string>
     <string name="title_activity_create_car">CreateCarActivity</string>
+    <string name="car_full_name">%1$s %2$s</string>
 </resources>

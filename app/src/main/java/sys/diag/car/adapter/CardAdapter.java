@@ -1,5 +1,6 @@
 package sys.diag.car.adapter;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,11 @@ import sys.diag.car.models.Car;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     private List<Car> cardList;
+    private  Context context;
     private OnItemClickListener listener;
     private final String NO_PREDICTED="Не диагностирован";
-    public CardAdapter(List<Car> cardList) {
-        this.cardList = cardList;
+    public CardAdapter(List<Car> cardList,Context context) {
+        this.cardList = cardList;this.context=context;
     }
     public interface OnItemClickListener {
         void onItemClick(Car car);
@@ -38,13 +40,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_it_car, parent, false);
         return new CardViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        holder.tvMarkCar.setText(cardList.get(position).getMarkCar());
+        String nameCar=context.getString(R.string.car_full_name,cardList.get(position).getMarkCar(),cardList.get(position).getModelCar());
+        holder.tvMarkCar.setText(nameCar);
         holder.tvYearCar.setText(cardList.get(position).getYearRelease());
         holder.tvIssueBroken.setText(cardList.get(position).getIssueBroken()==null?NO_PREDICTED:cardList.get(position).getIssueBroken());
         String imagePath =cardList.get(position).getImageUri();
@@ -82,9 +85,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvMarkCar = itemView.findViewById(R.id.tvMarkCarRes);
-            tvYearCar = itemView.findViewById(R.id.tvYearReleaseRes);
-            tvIssueBroken = itemView.findViewById(R.id.tvIssueBrokenRes);
+            tvMarkCar = itemView.findViewById(R.id.tvMarKar);
+            tvYearCar = itemView.findViewById(R.id.tvYearRelease);
+            tvIssueBroken = itemView.findViewById(R.id.tvBrokeIssue);
             ivCar = itemView.findViewById(R.id.ivCar);
 
         }

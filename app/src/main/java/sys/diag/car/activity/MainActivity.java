@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // Заполняем список данными
         List<Car> cards =carRepository.getCars();
 
-        adapter = new CardAdapter(cards);
+        adapter = new CardAdapter(cards,this);
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(new OverlapPageTransformer());
 
