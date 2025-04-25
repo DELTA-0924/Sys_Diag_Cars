@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+
 }
 
 android {
@@ -39,7 +41,13 @@ android {
 }
 
 dependencies {
-    implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation(libs.hilt.android)
+    implementation(libs.core)
+    annotationProcessor(libs.hilt.compiler)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    androidTestImplementation (libs.testCore)
+    implementation(libs.picasso)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

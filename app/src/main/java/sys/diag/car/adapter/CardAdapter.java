@@ -14,25 +14,25 @@ import java.util.List;
 import com.squareup.picasso.Picasso;
 
 import sys.diag.car.R;
-import sys.diag.car.models.Car;
+import sys.diag.car.dto.CarDto;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
-    private List<Car> cardList;
+    private List<CarDto> cardList;
     private  Context context;
     private OnItemClickListener listener;
     private final String NO_PREDICTED="Не диагностирован";
-    public CardAdapter(List<Car> cardList,Context context) {
+    public CardAdapter(List<CarDto> cardList, Context context) {
         this.cardList = cardList;this.context=context;
     }
     public interface OnItemClickListener {
-        void onItemClick(Car car);
+        void onItemClick(CarDto carDto);
 
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-    public void setCardList(List<Car> newCardList) {
+    public void setCardList(List<CarDto> newCardList) {
         this.cardList = newCardList;
         notifyDataSetChanged();
     }

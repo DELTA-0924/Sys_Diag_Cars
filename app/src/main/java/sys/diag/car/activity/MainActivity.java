@@ -17,12 +17,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
-import sys.diag.car.repository.CarRepository;
 import sys.diag.car.adapter.CardAdapter;
-import sys.diag.car.DAO.DataBaseHelper;
+import sys.diag.car.DB.DataBaseHelper;
 import sys.diag.car.common.OverlapPageTransformer;
 import sys.diag.car.R;
-import sys.diag.car.models.Car;
+import sys.diag.car.dto.CarDto;
 
 public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter blueToothAdapter=BluetoothAdapter.getDefaultAdapter();
@@ -32,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     CardAdapter adapter;
     private ViewPager2 viewPager;
-    private CarRepository carRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        carRepository=CarRepository.getInstanse(this);
+
         viewPager = findViewById(R.id.vp_cards);
         btnCreateCar=findViewById(R.id.btnCreateProfile);
         btnCreateCar.setOnClickListener(new View.OnClickListener() {
@@ -51,18 +50,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // Заполняем список данными
-        List<Car> cards =carRepository.getCars();
 
-        adapter = new CardAdapter(cards,this);
+        //adapter = new CardAdapter(cards,this);
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(new OverlapPageTransformer());
 
         adapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Car car) {
+            public void onItemClick(CarDto carDto) {
                 Intent intent = new Intent(MainActivity.this, CarDetailActivity.class);
-                intent.putExtra("selectedCar", car.getId());
-                Log.d( "id by car in onItemClick: ",String.valueOf(car.getId()));
+                intent.putExtra("selectedCar", carDto.getId());
+                Log.d( "id by car in onItemClick: ",String.valueOf(carDto.getId()));
                 startActivity(intent);
             }
         });
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> createCarLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    adapter.setCardList(carRepository.getCars());
+
                 }
             });
 

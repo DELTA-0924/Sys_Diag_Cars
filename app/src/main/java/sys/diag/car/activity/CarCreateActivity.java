@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,22 +24,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import sys.diag.car.repository.CarRepository;
+
 import sys.diag.car.R;
-import sys.diag.car.models.Car;
+import sys.diag.car.dto.CarDto;
 
 public class CarCreateActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     Button btnBack;
     Button btnCreate;
-    CarRepository carRepository;
+
     EditText markCar,modelCar,yearCar;
-    Car car;
+    CarDto carDto;
     private String imageFilePath;
     @Override
     protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        carRepository=CarRepository.getInstanse(getApplicationContext());
+
         setContentView(R.layout.activity_create_car);
         btnBack=findViewById(R.id.btnBack);
         btnCreate=findViewById(R.id.btnCreate);
@@ -64,7 +63,7 @@ public class CarCreateActivity extends AppCompatActivity {
                     Toast.makeText(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }
-                car=new Car(0,mark,model,year,null,null);
+
                 openFileChooser();
 
 
@@ -82,16 +81,16 @@ public class CarCreateActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             String internalPath=copyImageToInternalStorage(imageUri);
-            car.setImageUri(internalPath);
+            carDto.setImageUri(internalPath);
 
             try {
-                carRepository.addCar(car);
+
             }catch(Exception ex){
                 Log.e("Add Car",ex.getMessage());
             }
             Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
         }
-        car.setImageUri("NoData");
+        carDto.setImageUri("NoData");
         Intent resultIntent = new Intent();
         setResult(RESULT_OK, resultIntent);
         finish();

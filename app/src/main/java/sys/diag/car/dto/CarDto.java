@@ -1,19 +1,29 @@
-package sys.diag.car.models;
-public class Car {
+package sys.diag.car.dto;
+public class CarDto {
     private long id;
     private String markCar;
     private String modelCar;
     private String yearRelease;
     private String issueBroken;
     private String imageUri;
+    private long userId;
 
-    public Car(long id, String markCar, String modelCar, String yearRelease,String issueBroken,String imagePath) {
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public CarDto(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imagePath, long userId) {
         this.id=id;
         this.markCar = markCar;
         this.modelCar = modelCar;
         this.yearRelease = yearRelease;
         this.issueBroken = issueBroken;
         this.imageUri = imagePath;
+        this.userId=userId;
     }
 
     public long getId() {

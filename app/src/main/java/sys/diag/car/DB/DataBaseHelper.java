@@ -1,4 +1,4 @@
-package sys.diag.car.DAO;
+package sys.diag.car.DB;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
