@@ -31,10 +31,11 @@ public class CarRepository {
         );
     }
 
-    public CarDto getById(long carId){
-        return Optional.ofNullable(this.carDAO.getCarById(carId))
+    public LiveData<CarDto> getById(long carId){
+        return Transformations.map(this.carDAO.getCarById(carId),car->    Optional.ofNullable(car)
                 .map(this::convertToCarDto)
-                .orElse(null);
+                .orElse(null)
+        );
     }
 
     public void create( CarDto car){

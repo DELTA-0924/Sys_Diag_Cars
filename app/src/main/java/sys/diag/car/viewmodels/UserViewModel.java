@@ -24,10 +24,10 @@ public class UserViewModel extends ViewModel {
         this.userRepository.create(userDto);
     }
 
-    public  void Login(String email,String password){
-        this.userRepository.getByEmail(email);
+    public  LiveData<UserDto> Login(String name,String password){
+        return this.userRepository.getByName(name);
     }
-    public UserDto getCurrent(){
+    public LiveData <UserDto> getCurrent(){
         return this.userRepository.getUser();
     }
 

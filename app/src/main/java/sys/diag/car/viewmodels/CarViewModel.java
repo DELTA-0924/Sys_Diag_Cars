@@ -26,11 +26,13 @@ public class CarViewModel  extends ViewModel {
     public void CreateCar(CarDto carDto){
         this.carRepository.create(carDto);
     }
-    public void update(CarDto carDto){
+    public void updateCar(CarDto carDto){
         this.carRepository.update(carDto);
     }
-    public void delete(CarDto carDto){
+    public void deleteCar(CarDto carDto){
         this.carRepository.delete(carDto);
     }
-
+    public LiveData<CarDto> getByIdCar(long id){
+        return this.carRepository.getById(id);
+    }
 }

@@ -19,10 +19,12 @@ public interface CarDAO{
     @Query("DELETE FROM cars")
     void deleteAllUsers();
 
-    @Query("SELECT * FROM cars ORDER BY car_mark ASC")
+    @Query("SELECT * FROM cars ")
     LiveData<List<CarEntity>> getAllCar();
+    @Query("SELECT * FROM cars ")
+    List<CarEntity>getAllCarSync();
     @Query("SELECT * FROM cars WHERE id= :carId")
-    CarEntity getCarById(long carId);
+    LiveData< CarEntity> getCarById(long carId);
     @Query( "SELECT * FROM cars WHERE user_id= :userId")
     LiveData< List<CarEntity>>getCarsForUser(long userId);
 

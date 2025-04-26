@@ -6,12 +6,23 @@ public class UserDto {
     private long id;
     private String name;
     private String email;
+    private String password;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     private List<CarDto> userCarDtos;
 
-    public UserDto(long id, String name, String email) {
+    public UserDto(long id, String name, String email,String password) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     public void setId(long id) {

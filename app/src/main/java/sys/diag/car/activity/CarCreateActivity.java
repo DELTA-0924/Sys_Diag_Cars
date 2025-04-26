@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,22 +26,35 @@ import java.util.Date;
 import java.util.Locale;
 
 
+import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
+import sys.diag.car.dto.UserDto;
+import sys.diag.car.viewmodels.CarViewModel;
+import sys.diag.car.viewmodels.UserViewModel;
 
+@AndroidEntryPoint
 public class CarCreateActivity extends AppCompatActivity {
+    private CarViewModel carViewModel;
+    private UserViewModel userViewModel;
     private static final int PICK_IMAGE_REQUEST = 1;
     Button btnBack;
     Button btnCreate;
 
     EditText markCar,modelCar,yearCar;
     CarDto carDto;
+    UserDto currentUser;
     private String imageFilePath;
     @Override
     protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_create_car);
+        carViewModel=new ViewModelProvider(this).get(CarViewModel.class);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.getCurrent().observe(this,user->{
+        currentUser=user;
+        });
         btnBack=findViewById(R.id.btnBack);
         btnCreate=findViewById(R.id.btnCreate);
         markCar=findViewById(R.id.etName);
@@ -63,7 +77,7 @@ public class CarCreateActivity extends AppCompatActivity {
                     Toast.makeText(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }
-
+                carDto=new CarDto(0,mark,model,year,null,null,currentUser.getId());
                 openFileChooser();
 
 
@@ -84,7 +98,7 @@ public class CarCreateActivity extends AppCompatActivity {
             carDto.setImageUri(internalPath);
 
             try {
-
+                carViewModel.CreateCar(carDto);
             }catch(Exception ex){
                 Log.e("Add Car",ex.getMessage());
             }

@@ -1,24 +1,29 @@
 package sys.diag.car;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sys.diag.car.DB.AppDatabase;
 import sys.diag.car.DB.DAO.CarDAO;
+import sys.diag.car.DB.DAO.UserDAO;
 import sys.diag.car.DB.Entity.CarEntity;
-import sys.diag.car.helpers.LiveDataTestUtil;
+import sys.diag.car.DB.Entity.UserEntity;
 
 
 /**
@@ -26,10 +31,14 @@ import sys.diag.car.helpers.LiveDataTestUtil;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
+@RunWith(JUnit4.class)
 public class CarDaoTest {
+
     private AppDatabase db;
     private CarDAO carDAO;
+    private UserDAO userDAO;
+
+    private List<CarEntity> preparedData;
     @Before
     public void init(){
         Context context = ApplicationProvider.getApplicationContext();
@@ -37,6 +46,15 @@ public class CarDaoTest {
                 .allowMainThreadQueries() // только для тестов
                 .build();
         this.carDAO = db.carDAO();
+        this.userDAO = db.userDAO();
+        preparedData = new ArrayList<CarEntity>();
+        preparedData.add(new CarEntity(1,
+                "Toyota",
+                "Camry",
+                "2009",
+                "Engine",
+                "path/1/34e.img",
+                1));
     }
     @After
     public void closeDb(){
@@ -44,20 +62,12 @@ public class CarDaoTest {
     }
     @Test
     public void insertAndGetCar(){
-        CarEntity car=new CarEntity(1,"Toyota",
-                "Camry","2009",
-                "Engine","path/1/34e.img",
-                1);
-        carDAO.insert(car);
-        List<CarEntity> result;
-        try {
-             result = LiveDataTestUtil.getValue(carDAO.getAllCar());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        assertEquals("Camry",result.get(0).getModelCar());
+        UserEntity user= new UserEntity(1,"Samira","samira@gmail.com");
+        CarEntity car;
+        userDAO.insert(user);
+        carDAO.insert(preparedData.get(0));
+        car =carDAO.getCarById(1);
+        assertEquals("Camry",car.getModelCar());
     }
 
 

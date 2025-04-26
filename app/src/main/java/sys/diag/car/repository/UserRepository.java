@@ -1,5 +1,8 @@
 package sys.diag.car.repository;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
+
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -16,16 +19,29 @@ public class UserRepository {
         this.userDAO = userDAO;
     }
 
-    public UserDto getByEmail(String email){
-        return Optional.ofNullable(this.userDAO.getUserByEmail(email))
+    public LiveData<UserDto> getByEmail(String email){
+        return Transformations.map(this.userDAO.getUserByEmail(email),user->
+                Optional.ofNullable(user)
                 .map(this::convertToUserDto)
-                .orElse(null);
+                .orElse(null)
+        );
+
+    }
+    public  LiveData<UserDto>  getByName(String name){
+        return Transformations.map(this.userDAO.getUserByName(name),user->
+                Optional.ofNullable(user)
+                        .map(this::convertToUserDto)
+                        .orElse(null)
+        );
     }
 
-    public UserDto getUser(){
-        return Optional.ofNullable(this.userDAO.getUser())
-                .map(this::convertToUserDto)
-                .orElse(null);
+
+    public LiveData<UserDto> getUser(){
+        return Transformations.map(this.userDAO.getUser(),user->
+            Optional.ofNullable(user)
+                    .map(this::convertToUserDto)
+                    .orElse(null)
+                );
     }
 
 
@@ -55,7 +71,8 @@ public class UserRepository {
         return new UserDto(
                 userEntity.getId(),
                 userEntity.getName(),
-                userEntity.getEmail()
+                userEntity.getEmail(),
+                "userPassword"
         );
     }
     private UserEntity convertToUserEntity(UserDto userDto){

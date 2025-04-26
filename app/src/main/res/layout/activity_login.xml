@@ -50,13 +50,13 @@
                     android:textColor="@color/white"
                     android:textSize="42sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/editTextName"
+                    app:layout_constraintBottom_toTopOf="@+id/editTextNameLogin"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
                    />
 
                 <EditText
-                    android:id="@+id/editTextName"
+                    android:id="@+id/editTextNameLogin"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
@@ -75,7 +75,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
                 <EditText
-                    android:id="@+id/editTextPassword"
+                    android:id="@+id/editTextPasswordLogin"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
@@ -91,7 +91,7 @@
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameLogin" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLogin"
@@ -109,7 +109,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/view5"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextPasswordLogin" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -122,7 +122,7 @@
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
-                    app:layout_constraintTop_toBottomOf="@+id/btnCreate" />
+                    app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
