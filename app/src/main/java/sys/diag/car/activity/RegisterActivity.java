@@ -45,7 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
     private UserDto extractData(){
         UserDto userDto= new UserDto(0,name.getText().toString(),
                                         email.getText().toString(),
-                                        password.getText().toString());
+                                        password.getText().toString(),
+                                        "No Data")
+                    ;
         return userDto;
     }
 }

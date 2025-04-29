@@ -2,6 +2,8 @@ package sys.diag.car.activity;
 
 import static android.widget.Toast.LENGTH_LONG;
 
+import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -94,7 +96,7 @@ public class CarCreateActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            String internalPath=copyImageToInternalStorage(imageUri);
+            String internalPath=copyImageToInternalStorage(imageUri,CarCreateActivity.this);
             carDto.setImageUri(internalPath);
 
             try {
@@ -104,42 +106,13 @@ public class CarCreateActivity extends AppCompatActivity {
             }
             Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
         }
-        carDto.setImageUri("NoData");
         Intent resultIntent = new Intent();
         setResult(RESULT_OK, resultIntent);
         finish();
     }
-    private String getPathFromUri(Uri uri) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-        return picturePath;
-    }
 
-    private String copyImageToInternalStorage(Uri uri) {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "image_" + timeStamp + ".jpg";
 
-        try (InputStream inputStream = getContentResolver().openInputStream(uri)) {
-            if (inputStream == null) return null;
 
-            File internalFile = new File(getFilesDir(), imageFileName);
-            try (FileOutputStream outputStream = new FileOutputStream(internalFile)) {
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, read);
-                }
-                return internalFile.getAbsolutePath();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
       public void onBackPressed() {

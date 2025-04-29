@@ -12,17 +12,12 @@ import androidx.room.Delete;
 
 import java.util.List;
 
-import sys.diag.car.DB.Entity.CarEntity;
 import sys.diag.car.DB.Entity.UserEntity;
+
 
 @Dao
 public interface UserDAO {
-    class UserWithCars{
-        @Embedded
-        public UserEntity user;
-        @Relation(parentColumn = "id",entityColumn = "user_id")
-        public List<CarEntity>cars;
-    }
+
     @Insert
     void insert(UserEntity user);
     @Update
@@ -41,5 +36,5 @@ public interface UserDAO {
     LiveData<UserEntity> getUserByName(String userName);
     @Transaction
     @Query("SELECT * FROM users")
-    List<UserWithCars>getUsersWithCars();
+    LiveData<List<UserWithCars>>getUsersWithCars();
 }

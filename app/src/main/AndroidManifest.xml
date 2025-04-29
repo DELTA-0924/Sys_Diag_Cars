@@ -38,6 +38,11 @@
             android:label="@string/title_activity_create_car"
             android:theme="@style/Theme.SystemDiagnosticCar" />
         <activity
+            android:name=".activity.UserDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_create_car"
+            android:theme="@style/Theme.SystemDiagnosticCar" />
+        <activity
             android:name=".activity.MainActivity"
             android:exported="true" >
             <intent-filter>

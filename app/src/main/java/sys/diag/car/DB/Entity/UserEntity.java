@@ -12,11 +12,22 @@ public class UserEntity {
     private String name;
     @ColumnInfo(name = "user_email")
     private String email;
+    @ColumnInfo(name = "user_avatar")
+    private String avatar;
 
-    public UserEntity(long id, String name, String email) {
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public UserEntity(long id, String name, String email,String avatar) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.avatar = avatar;
     }
 
     public void setId(long id) {

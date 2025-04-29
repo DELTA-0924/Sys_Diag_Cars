@@ -3,11 +3,13 @@ package sys.diag.car.repository;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import sys.diag.car.DB.DAO.UserDAO;
+import sys.diag.car.DB.DAO.UserWithCars;
 import sys.diag.car.DB.Entity.UserEntity;
 import sys.diag.car.dto.UserDto;
 
@@ -44,6 +46,9 @@ public class UserRepository {
                 );
     }
 
+    public LiveData<List<UserWithCars>>getUserCars(){
+        return this.userDAO.getUsersWithCars();
+    }
 
     public void create(UserDto userDto){
         UserEntity userEntity=Optional.ofNullable(userDto)
@@ -72,13 +77,15 @@ public class UserRepository {
                 userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getEmail(),
-                "userPassword"
+                "userPassword",
+                userEntity.getAvatar()
         );
     }
     private UserEntity convertToUserEntity(UserDto userDto){
         return new UserEntity(userDto.getId(),
                 userDto.getName(),
-                userDto.getEmail()
+                userDto.getEmail(),
+                userDto.getImagePath()
         );
     }
 }

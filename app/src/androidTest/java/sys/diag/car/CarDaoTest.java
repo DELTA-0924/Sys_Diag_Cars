@@ -62,7 +62,7 @@ public class CarDaoTest {
     }
     @Test
     public void insertAndGetCar(){
-        UserEntity user= new UserEntity(1,"Samira","samira@gmail.com");
+        UserEntity user= new UserEntity(1,"Samira","samira@gmail.com","No Data");
         CarEntity car;
         userDAO.insert(user);
         carDAO.insert(preparedData.get(0));

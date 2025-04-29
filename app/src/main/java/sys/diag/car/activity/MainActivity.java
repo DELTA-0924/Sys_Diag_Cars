@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,13 +31,11 @@ import sys.diag.car.viewmodels.UserViewModel;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
+    ImageView mainIocn;
     private CarViewModel carViewModel;
     private UserViewModel userViewModel;
     private BluetoothAdapter blueToothAdapter=BluetoothAdapter.getDefaultAdapter();
     private Button btnCreateCar;
-    private ImageButton imgBtnBlueTooth;
-    private DataBaseHelper databaseHelper;
-    private SQLiteDatabase db;
     CardAdapter adapter;
     private ViewPager2 viewPager;
 
@@ -45,21 +44,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        carViewModel= new ViewModelProvider(this).get(CarViewModel.class);
+
         userViewModel.getCurrent().observe(this,user->{
             if(user==null){
                 Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                finish();
             }
 
         });
-        carViewModel= new ViewModelProvider(this).get(CarViewModel.class);
+
+        setUp();
         adapter = new CardAdapter(new ArrayList<>(),this);
         carViewModel.getAllCars().observe(this,cars->{
             adapter.setCardList(cars);
         });
-        viewPager = findViewById(R.id.vp_cards);
-        btnCreateCar=findViewById(R.id.btnCreateProfile);
+        viewPager.setAdapter(adapter);
+        viewPager.setPageTransformer(new OverlapPageTransformer());
+
+        mainIocn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, UserDetailActivity.class);
+                createCarLauncher.launch(intent);
+            }
+        });
+
+
         btnCreateCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        // Заполняем список данными
-
-
-        viewPager.setAdapter(adapter);
-        viewPager.setPageTransformer(new OverlapPageTransformer());
 
         adapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
             @Override
@@ -84,14 +94,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
+
+    private void setUp(){
+        viewPager = findViewById(R.id.vp_cards);
+        btnCreateCar=findViewById(R.id.btnCreateProfile);
+        mainIocn=findViewById(R.id.imageView);
+    }
+
+
+
     private final ActivityResultLauncher<Intent> createCarLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK) {
-
-                }
             });
-
-
-
 }

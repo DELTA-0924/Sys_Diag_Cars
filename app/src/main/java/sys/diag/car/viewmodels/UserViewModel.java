@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import sys.diag.car.DB.DAO.UserWithCars;
 import sys.diag.car.dto.UserDto;
 import sys.diag.car.repository.UserRepository;
 
@@ -22,6 +23,10 @@ public class UserViewModel extends ViewModel {
 
     public void Register(UserDto userDto){
         this.userRepository.create(userDto);
+    }
+
+    public LiveData<List<UserWithCars>> getUserCars(){
+        return this.userRepository.getUserCars();
     }
 
     public  LiveData<UserDto> Login(String name,String password){

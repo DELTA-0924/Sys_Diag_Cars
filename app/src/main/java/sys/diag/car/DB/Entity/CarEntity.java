@@ -10,7 +10,9 @@ import androidx.room.util.TableInfo;
         foreignKeys = @ForeignKey(entity = UserEntity.class,
                                     parentColumns = "id",
                                     childColumns = "user_id",
-                                    onUpdate = ForeignKey.CASCADE))
+                                    onUpdate = ForeignKey.CASCADE,
+                                    onDelete = ForeignKey.CASCADE
+        ))
 public class CarEntity {
     @PrimaryKey(autoGenerate = true)
     private long id;
