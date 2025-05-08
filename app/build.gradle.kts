@@ -43,6 +43,9 @@ android {
 dependencies {
     implementation(libs.hilt.android)
     implementation(libs.core)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
     annotationProcessor(libs.hilt.compiler)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)

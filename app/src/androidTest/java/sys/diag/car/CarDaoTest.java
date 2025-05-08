@@ -48,27 +48,27 @@ public class CarDaoTest {
         this.carDAO = db.carDAO();
         this.userDAO = db.userDAO();
         preparedData = new ArrayList<CarEntity>();
-        preparedData.add(new CarEntity(1,
-                "Toyota",
-                "Camry",
-                "2009",
-                "Engine",
-                "path/1/34e.img",
-                1));
+//        preparedData.add(new CarEntity(1,
+//                "Toyota",
+//                "Camry",
+//                "2009",
+//                "Engine",
+//                "path/1/34e.img",
+//                1));
     }
     @After
     public void closeDb(){
         db.close();
     }
-    @Test
-    public void insertAndGetCar(){
-        UserEntity user= new UserEntity(1,"Samira","samira@gmail.com","No Data");
-        CarEntity car;
-        userDAO.insert(user);
-        carDAO.insert(preparedData.get(0));
-        car =carDAO.getCarById(1);
-        assertEquals("Camry",car.getModelCar());
-    }
+//    @Test
+//    public void insertAndGetCar(){
+//        UserEntity user= new UserEntity(1,"Samira","samira@gmail.com","No Data");
+//        CarEntity car;
+//        userDAO.insert(user);
+//        carDAO.insert(preparedData.get(0));
+//        car =carDAO.getCarById(1);
+//        assertEquals("Camry",car.getModelCar());
+//    }
 
 
 

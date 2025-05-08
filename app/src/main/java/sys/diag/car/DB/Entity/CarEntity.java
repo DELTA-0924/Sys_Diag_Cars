@@ -26,6 +26,16 @@ public class CarEntity {
     private String issueBroken;
     @ColumnInfo(name="car_image_url")
     private String imageUri;
+    @ColumnInfo(name="car_synchronized")
+    private Boolean _synchronized;
+
+    public void set_synchronized(Boolean _synchronized) {
+        this._synchronized = _synchronized;
+    }
+
+    public Boolean get_synchronized() {
+        return _synchronized;
+    }
 
     public void setUserId(long userId) {
         this.userId = userId;
@@ -37,7 +47,7 @@ public class CarEntity {
 
     @ColumnInfo(name="user_id")
     private long userId;
-    public CarEntity(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imageUri,long userId) {
+    public CarEntity(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imageUri,long userId,Boolean _synchronized) {
         this.id = id;
         this.markCar = markCar;
         this.modelCar = modelCar;
@@ -45,6 +55,7 @@ public class CarEntity {
         this.issueBroken = issueBroken;
         this.imageUri = imageUri;
         this.userId=userId;
+        this._synchronized = _synchronized;
     }
 
 

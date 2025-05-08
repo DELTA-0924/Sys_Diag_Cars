@@ -2,6 +2,7 @@ package sys.diag.car.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
+import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
 import sys.diag.car.viewmodels.UserViewModel;
 @AndroidEntryPoint
@@ -37,22 +39,24 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        userViewModel.getLoginResult().observe(LoginActivity.this,result->{
+            if(result.status== Result.Status.SUCCESS){
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Toast.makeText(LoginActivity.this, "Успех: " + result.message, Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+                Log.w("TOKEN",result.data.getAccess_token());
+            }
+            else if(result.status == Result.Status.ERROR){
+                Toast.makeText(LoginActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
+
+            }
+        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String passwordStr=password.getText().toString();
                 String userNameStr=userName.getText().toString();
-
-                 userViewModel.Login(userNameStr,passwordStr).observe(LoginActivity.this,user->{
-                     if(user==null){
-                         Toast.makeText(LoginActivity.this, "Введенные данные не верны", Toast.LENGTH_LONG).show();
-                     }
-                     else{
-                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                         startActivity(intent);
-                     }
-                 });
-
+                userViewModel.login(userNameStr,passwordStr);
             }
         });
     }

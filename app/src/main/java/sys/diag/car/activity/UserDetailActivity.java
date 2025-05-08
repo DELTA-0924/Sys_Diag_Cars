@@ -21,27 +21,34 @@ import com.squareup.picasso.Picasso;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
+import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
+import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.UserViewModel;
 @AndroidEntryPoint
 public class UserDetailActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private UserViewModel userViewModel;
+    private CarViewModel carViewModel;
     private ImageView avatar;
-    private AppCompatButton btnLogout,btnBack;
+    private AppCompatButton btnLogout,btnBack,btnSync;
     private TextView joinDate,carCount,email,userName;
     private UserDto userDto;
+    private String token;
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
         setContentView(R.layout.activity_detail_profile);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         setUp();
         userViewModel.getCurrent().observe(this,user-> loadData(user));
         userViewModel.getUserCars().observe(this,cars-> {
             carCount.setText(String.valueOf(cars.get(0).cars.size()));
             Log.e("CAR",String.valueOf(cars.get(0).cars.size()));
         });
+
+
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +58,11 @@ public class UserDetailActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 userViewModel.Logout(userDto);
+
+
+
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +71,19 @@ public class UserDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        btnSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("BTNSync","CLick");
+                    carViewModel.synchronizeData(token);
+
+            }
+        });
     }
     private void setUp(){
         btnLogout = findViewById(R.id.btnLogout);
         btnBack = findViewById(R.id.btnBack2);
+        btnSync = findViewById(R.id.btnSync);
         avatar = findViewById(R.id.ivAvatars);
         joinDate = findViewById(R.id.tvJoinDateValue);
         carCount = findViewById(R.id.tvCarCountValue);
@@ -73,7 +93,7 @@ public class UserDetailActivity extends AppCompatActivity {
    private void loadData(UserDto user){
         email.setText(user.getEmail());
         userName.setText(user.getName());
-
+        token = user.getAccessToken();
         loadAvatar(user.getImagePath());
         userDto=user;
    }

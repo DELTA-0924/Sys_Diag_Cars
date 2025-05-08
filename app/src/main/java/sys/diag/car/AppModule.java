@@ -10,9 +10,14 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import sys.diag.car.DB.AppDatabase;
 import sys.diag.car.DB.DAO.CarDAO;
 import sys.diag.car.DB.DAO.UserDAO;
+import sys.diag.car.api.ApiService;
 import sys.diag.car.repository.CarRepository;
 import sys.diag.car.repository.UserRepository;
 
@@ -38,12 +43,44 @@ public class AppModule {
     }
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserDAO userDAO){
-        return new UserRepository(userDAO);
+    UserRepository provideUserRepository(UserDAO userDAO,ApiService apiService){
+        return new UserRepository(userDAO,apiService);
     }
     @Provides
     @Singleton
-    CarRepository provideCarRepository(CarDAO carDAO){
-        return new CarRepository(carDAO);
+    CarRepository provideCarRepository(CarDAO carDAO,ApiService apiService){
+        return new CarRepository(carDAO,apiService);
+    }
+
+
+    @Provides
+    @Singleton
+    public static HttpLoggingInterceptor provideLoggingInterceptor() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return logging;
+    }
+
+    @Provides
+    @Singleton
+    public static OkHttpClient provideOkHttpClient(HttpLoggingInterceptor logging) {
+        return new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    public static Retrofit provideRetrofit(OkHttpClient client) {
+        return new Retrofit.Builder()
+                .baseUrl("http://192.168.1.5:8000/api/v1/") // ← замени на свою
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+    }
+    @Provides
+    @Singleton
+    public static ApiService provideApiService(Retrofit retrofit) {
+        return retrofit.create(ApiService.class);
     }
 }

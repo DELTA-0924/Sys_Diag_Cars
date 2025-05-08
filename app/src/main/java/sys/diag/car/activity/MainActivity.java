@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,6 +27,7 @@ import sys.diag.car.DB.DataBaseHelper;
 import sys.diag.car.common.OverlapPageTransformer;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
+import sys.diag.car.dto.Result;
 import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.UserViewModel;
 
@@ -49,20 +51,40 @@ public class MainActivity extends AppCompatActivity {
         carViewModel= new ViewModelProvider(this).get(CarViewModel.class);
 
         userViewModel.getCurrent().observe(this,user->{
+
             if(user==null){
+
                 Intent intent=new Intent(MainActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
 
+            String uid = String.valueOf(user.getId());
+            String token = user.getAccessToken();
+            Log.w("USER_UID",token==null?"User  id is ":uid);
+            carViewModel.loadData(token);
         });
 
+        carViewModel.getLoadData().observe(this,result->{
+            if(result.status == Result.Status.ERROR && result.data==null)
+                Toast.makeText(this,result.message,Toast.LENGTH_LONG).show();
+
+        });
         setUp();
         adapter = new CardAdapter(new ArrayList<>(),this);
         carViewModel.getAllCars().observe(this,cars->{
+            for(CarDto car:cars) {
+                Log.e("CAR", String.valueOf( car.getId()));
+                Log.e("CAR", String.valueOf( car.getUserId()));
+            }
             adapter.setCardList(cars);
         });
+
+
+
+
+
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(new OverlapPageTransformer());
 

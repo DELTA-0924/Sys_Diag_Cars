@@ -8,6 +8,39 @@ public class UserDto {
     private String email;
     private String password;
     private String imagePath;
+    private String accessToken;
+    private String refreshToken;
+
+    public UserDto(long id, String name, String email,String password,String imagePath) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.imagePath = imagePath;
+    }
+    public UserDto(long id, String name, String email,String accessToken,String refreshToken,String imagePath) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.imagePath = imagePath;
+    }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
@@ -26,14 +59,6 @@ public class UserDto {
     }
 
     private List<CarDto> userCarDtos;
-
-    public UserDto(long id, String name, String email,String password,String imagePath) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.imagePath = imagePath;
-    }
 
     public void setId(long id) {
         this.id = id;

@@ -64,7 +64,7 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_btn_login2"
                     android:ems="10"
-                    android:hint="user name"
+                    android:hint="email"
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textColor="@color/white"

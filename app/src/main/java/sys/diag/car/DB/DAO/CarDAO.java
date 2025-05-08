@@ -2,6 +2,7 @@ package sys.diag.car.DB.DAO;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
@@ -27,5 +28,8 @@ public interface CarDAO{
     LiveData< CarEntity> getCarById(long carId);
     @Query( "SELECT * FROM cars WHERE user_id= :userId")
     LiveData< List<CarEntity>>getCarsForUser(long userId);
-
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<CarEntity> cars);
+    @Query("UPDATE cars SET car_synchronized = 1 WHERE id IN (:ids)")
+    void markAsSynchronized(List<Long> ids);
 }

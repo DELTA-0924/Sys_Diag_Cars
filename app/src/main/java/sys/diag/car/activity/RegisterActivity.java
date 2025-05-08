@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
+import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
 import sys.diag.car.viewmodels.UserViewModel;
 
@@ -26,13 +28,20 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         userViewmodel = new ViewModelProvider(this).get(UserViewModel.class);
         setUpWidgets();
+        userViewmodel.getRegisterResult().observe(RegisterActivity.this,result->{
+            if(result.status == Result.Status.SUCCESS){
+                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+            else if(result.status == Result.Status.ERROR){
+                Toast.makeText(RegisterActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
+            }
+        });
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserDto userDto = extractData();
-                userViewmodel.Register(userDto);
-                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                startActivity(intent);
+                userViewmodel.register(userDto);
             }
         });
     }
