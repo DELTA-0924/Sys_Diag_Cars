@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
+import sys.diag.car.common.DataImageUtil;
 import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
 import sys.diag.car.viewmodels.CarViewModel;
@@ -35,6 +37,7 @@ public class UserDetailActivity extends AppCompatActivity {
     private TextView joinDate,carCount,email,userName;
     private UserDto userDto;
     private String token;
+    private ProgressBar loadingUi;
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -45,9 +48,18 @@ public class UserDetailActivity extends AppCompatActivity {
         userViewModel.getCurrent().observe(this,user-> loadData(user));
         userViewModel.getUserCars().observe(this,cars-> {
             carCount.setText(String.valueOf(cars.get(0).cars.size()));
-            Log.e("CAR",String.valueOf(cars.get(0).cars.size()));
         });
 
+        carViewModel.getSynchronizeData().observe(this,result->{
+            if(result.status == Result.Status.SUCCESS && result.data!=null){
+                Toast.makeText(UserDetailActivity.this, "Синхронизирован", Toast.LENGTH_SHORT).show();
+                loadingUi.setVisibility(View.GONE);
+            }
+            else{
+                Toast.makeText(UserDetailActivity.this, result.message, Toast.LENGTH_SHORT).show();
+                loadingUi.setVisibility(View.GONE);
+            }
+        });
 
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,9 +72,7 @@ public class UserDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 userViewModel.Logout(userDto);
-
-
-
+                DataImageUtil.deleteAllSavedImages(UserDetailActivity.this);
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +85,8 @@ public class UserDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("BTNSync","CLick");
-                    carViewModel.synchronizeData(token);
-
+                    carViewModel.synchronizeData(token,UserDetailActivity.this.getFilesDir());
+                    loadingUi.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -89,6 +99,7 @@ public class UserDetailActivity extends AppCompatActivity {
         carCount = findViewById(R.id.tvCarCountValue);
         userName = findViewById(R.id.tvName);
         email = findViewById(R.id.tvEmail);
+        loadingUi = findViewById(R.id.loading2);
    }
    private void loadData(UserDto user){
         email.setText(user.getEmail());
@@ -124,7 +135,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            String internalPath=copyImageToInternalStorage(imageUri,UserDetailActivity.this);
+            String internalPath=copyImageToInternalStorage(imageUri,UserDetailActivity.this,userDto.getId());
             userDto.setImagePath(internalPath);
             if(userDto.getImagePath()!=null)
                 Log.e("IMG","Image has but something went wrong");

@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import sys.diag.car.api.contact.CarsResponse;
 import sys.diag.car.api.contact.ResponseContact;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.Result;
@@ -46,12 +46,12 @@ public class CarViewModel  extends ViewModel {
         return responseSynchronizeData;
     }
 
-    public void loadData(String token){
-        this.carRepository.loadData(token,responseLoadData);
+    public void loadData(String token, File fileDir){
+        this.carRepository.loadData(token,responseLoadData,fileDir);
     }
 
-    public void synchronizeData(String token){
-        this.carRepository.syncData(token,responseSynchronizeData);
+    public void synchronizeData(String token,File internalDir){
+        this.carRepository.syncData(token,responseSynchronizeData,internalDir);
     }
 
     public LiveData<CarDto> getByIdCar(long id){

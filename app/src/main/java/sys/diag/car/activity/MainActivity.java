@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +25,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.adapter.CardAdapter;
 import sys.diag.car.DB.DataBaseHelper;
+import sys.diag.car.common.DataImageUtil;
 import sys.diag.car.common.OverlapPageTransformer;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnCreateCar;
     CardAdapter adapter;
     private ViewPager2 viewPager;
-
+    private ProgressBar loadingUi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,25 +64,21 @@ public class MainActivity extends AppCompatActivity {
 
             String uid = String.valueOf(user.getId());
             String token = user.getAccessToken();
-            Log.w("USER_UID",token==null?"User  id is ":uid);
-            carViewModel.loadData(token);
+            carViewModel.loadData(token,MainActivity.this.getFilesDir());
         });
 
         carViewModel.getLoadData().observe(this,result->{
             if(result.status == Result.Status.ERROR && result.data==null)
                 Toast.makeText(this,result.message,Toast.LENGTH_LONG).show();
-
+            loadingUi.setVisibility(View.GONE);
         });
         setUp();
         adapter = new CardAdapter(new ArrayList<>(),this);
         carViewModel.getAllCars().observe(this,cars->{
-            for(CarDto car:cars) {
-                Log.e("CAR", String.valueOf( car.getId()));
-                Log.e("CAR", String.valueOf( car.getUserId()));
-            }
-            adapter.setCardList(cars);
-        });
 
+            adapter.setCardList(cars);
+
+        });
 
 
 
@@ -111,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(CarDto carDto) {
                 Intent intent = new Intent(MainActivity.this, CarDetailActivity.class);
-                intent.putExtra("selectedCar", carDto.getId());
-                Log.d( "id by car in onItemClick: ",String.valueOf(carDto.getId()));
+                intent.putExtra("selectedCar", carDto);
+
                 startActivity(intent);
             }
         });
@@ -124,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.vp_cards);
         btnCreateCar=findViewById(R.id.btnCreateProfile);
         mainIocn=findViewById(R.id.imageView);
+        loadingUi=findViewById(R.id.loading1);
     }
 
 

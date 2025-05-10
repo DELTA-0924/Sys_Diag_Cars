@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import sys.diag.car.viewmodels.UserViewModel;
 public class RegisterActivity extends AppCompatActivity {
     private UserViewModel userViewmodel;
     private Button btnRegister;
+    private ProgressBar loadingUI;
     private EditText name,email,password;
     @Override
     protected void onCreate(Bundle bundle){
@@ -36,12 +38,14 @@ public class RegisterActivity extends AppCompatActivity {
             else if(result.status == Result.Status.ERROR){
                 Toast.makeText(RegisterActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
             }
+            loadingUI.setVisibility(View.GONE);
         });
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserDto userDto = extractData();
                 userViewmodel.register(userDto);
+                loadingUI.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -50,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         email=findViewById(R.id.editTextEmail);
         password=findViewById(R.id.editTextPassword);
         btnRegister=findViewById(R.id.btnRegister);
+        loadingUI = findViewById(R.id.loading4);
     }
     private UserDto extractData(){
         UserDto userDto= new UserDto(0,name.getText().toString(),

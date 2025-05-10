@@ -1,5 +1,7 @@
 package sys.diag.car.api.contact;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CarResponse {
     private String uid;
     private String user_uid;
@@ -7,6 +9,7 @@ public class CarResponse {
     private String car_mark;
     private String car_year;
     private String issueBroken;
+    @SerializedName("car_image_path")
     private String image_path;
 
 

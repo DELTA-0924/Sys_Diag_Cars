@@ -1,28 +1,28 @@
 package sys.diag.car.api.contact;
 
 public class ResponseContact {
-    private String code;
-    private String details;
+    private String status_code;
+    private String detail;
 
 
-    public ResponseContact(String code, String details) {
-        this.code = code;
-        this.details = details;
+    public void setStatus_code(String status_code) {
+        this.status_code = status_code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public String getStatus_code() {
+        return status_code;
     }
 
-    public String getCode() {
-        return code;
+    public String getDetail() {
+        return detail;
     }
 
-    public String getDetails() {
-        return details;
+    public ResponseContact(String status_code, String detail) {
+        this.status_code = status_code;
+        this.detail = detail;
     }
 }

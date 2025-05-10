@@ -39,7 +39,7 @@ import sys.diag.car.viewmodels.UserViewModel;
 public class CarCreateActivity extends AppCompatActivity {
     private CarViewModel carViewModel;
     private UserViewModel userViewModel;
-    private static final int PICK_IMAGE_REQUEST = 1;
+
     Button btnBack;
     Button btnCreate;
 
@@ -79,38 +79,14 @@ public class CarCreateActivity extends AppCompatActivity {
                     Toast.makeText(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }
-                carDto=new CarDto(0,mark,model,year,null,null,currentUser.getId());
-                openFileChooser();
-
-
+                carDto=new CarDto(0,mark,model,year,null,"image",currentUser.getId());
+                carViewModel.CreateCar(carDto);
+                //openFileChooser();
+                Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
-    private void openFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            String internalPath=copyImageToInternalStorage(imageUri,CarCreateActivity.this);
-            carDto.setImageUri(internalPath);
-
-            try {
-                carViewModel.CreateCar(carDto);
-            }catch(Exception ex){
-                Log.e("Add Car",ex.getMessage());
-            }
-            Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
-        }
-        Intent resultIntent = new Intent();
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
 
 
 

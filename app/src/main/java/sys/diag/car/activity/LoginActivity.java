@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private AppCompatButton btnLogin;
     private EditText userName,password;
     private TextView textRegister;
+    private ProgressBar loadingUi;
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -50,13 +52,16 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
 
             }
+            loadingUi.setVisibility(View.INVISIBLE);
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingUi.setVisibility(View.VISIBLE);
                 String passwordStr=password.getText().toString();
                 String userNameStr=userName.getText().toString();
                 userViewModel.login(userNameStr,passwordStr);
+
             }
         });
     }
@@ -65,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         userName = findViewById(R.id.editTextNameLogin);
         password = findViewById(R.id.editTextPasswordLogin);
         textRegister = findViewById(R.id.tvMessage2);
+        loadingUi  = findViewById(R.id.loading3);
     }
 
 }

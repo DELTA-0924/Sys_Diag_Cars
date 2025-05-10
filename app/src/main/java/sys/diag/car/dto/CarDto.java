@@ -1,5 +1,8 @@
 package sys.diag.car.dto;
-public class CarDto {
+
+import java.io.Serializable;
+
+public class CarDto implements Serializable {
     private long id;
     private String markCar;
     private String modelCar;

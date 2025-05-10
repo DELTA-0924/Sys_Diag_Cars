@@ -1,12 +1,19 @@
 package sys.diag.car.activity;
 
+import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,9 +30,10 @@ public class CarDetailActivity extends AppCompatActivity {
     private CarViewModel carViewModel;
     Button btnBack;
     TextView tvMarkCar,tvYearCar,tvIssueBroken;
+    private static final int PICK_IMAGE_REQUEST = 1;
     private final String NO_PREDICTED="Не диагностирован";
     ImageView ivCar;
-
+    CarDto selectedCar;
     @Override
     protected void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -42,10 +50,16 @@ public class CarDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        ivCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
         if (getIntent() != null && getIntent().hasExtra("selectedCar")) {
-            long selectedCarId=getIntent().getLongExtra("selectedCar",1);
+             selectedCar=(CarDto)getIntent().getSerializableExtra("selectedCar");
 
-            carViewModel.getByIdCar(selectedCarId).observe(this,car-> {
+            carViewModel.getByIdCar(selectedCar.getId()).observe(this,car-> {
                         tvMarkCar.setText(car.getMarkCar());
                         tvYearCar.setText(car.getYearRelease());
                         tvIssueBroken.setText(car.getIssueBroken() == null ? NO_PREDICTED : car.getIssueBroken());
@@ -58,7 +72,7 @@ public class CarDetailActivity extends AppCompatActivity {
                                     .error(R.drawable.img_error) // Заглушка, показываемая в случае ошибки загрузки
                                     .into(ivCar);
                         }
-                        else {
+                        else if(imagePath.equals("image")){
                             Picasso.get()
                                     .load(R.drawable.img_place_holder)
                                     .into(ivCar);
@@ -66,6 +80,29 @@ public class CarDetailActivity extends AppCompatActivity {
             });
         }
     }
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            String internalPath=copyImageToInternalStorage(imageUri,CarDetailActivity.this,selectedCar.getId());
+            selectedCar.setImageUri(internalPath);
+            Log.e("IMAGE_CAR",selectedCar.getImageUri());
+            try {
+                carViewModel.updateCar(selectedCar);
+            }catch(Exception ex){
+                Log.e("Add Car",ex.getMessage());
+            }
+
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
