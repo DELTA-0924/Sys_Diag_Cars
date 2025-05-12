@@ -1,5 +1,7 @@
 package sys.diag.car.adapter;
 
+import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,9 +53,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.tvYearCar.setText(cardList.get(position).getYearRelease());
         holder.tvIssueBroken.setText(cardList.get(position).getIssueBroken()==null?NO_PREDICTED:cardList.get(position).getIssueBroken());
         String imagePath =cardList.get(position).getImageUri();
-        if( imagePath!=null &&!imagePath.equals("No_Data")) {
+        if( imagePath!=null &&!imagePath.equals(NO_IMAGE)) {
 
-            Log.e("LOAD_IMAGE",imagePath);
 
             Picasso.get()
                     .load( "file://"+imagePath) // Здесь вызывайте метод, который возвращает URL изображения
@@ -70,7 +71,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             if (listener != null) {
                 listener.onItemClick(cardList.get(position));
             }
-            Log.d( "id by car in onBindViewHolder: ",String.valueOf(cardList.get(position).getId()));
         });
     }
 

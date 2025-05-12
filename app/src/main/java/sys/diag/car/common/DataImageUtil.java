@@ -23,9 +23,10 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public  class DataImageUtil {
-    public static String copyImageToInternalStorage(Uri uri, Context context,long carId) {
+    public final static String NO_IMAGE = "placeholder";
+    public static String copyImageToInternalStorage(Uri uri, Context context,String imageFileName) {
 
-        String imageFileName = carId+"_Car"+".jpg";
+
 
         try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
             if (inputStream == null) return null;
@@ -71,14 +72,14 @@ public  class DataImageUtil {
 
     }
 
-    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(File internalDir,String filename) {
+    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(File internalDir) {
         List<MultipartBody.Part> images = new ArrayList<>();
 
         File[] files = internalDir.listFiles();
 
         if (files != null) {
             for (File file : files) {
-                if (file.isFile() && file.getName().toLowerCase().endsWith(".jpg") && file.getName().toLowerCase().equals(filename)) {
+                if (file.isFile() && file.getName().toLowerCase().endsWith(".jpg")) {
                     RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
                     MultipartBody.Part part = MultipartBody.Part.createFormData("images", file.getName(), requestFile);
                     images.add(part);
@@ -99,6 +100,17 @@ public  class DataImageUtil {
 
                     file.delete();
 
+            }
+        }
+    }
+    public static void deleteImagesByName(Context context,String filename) {
+        File dir = context.getFilesDir();
+        File[] files = dir.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if(file.getName().toLowerCase().equals(filename))
+                    file.delete();
             }
         }
     }

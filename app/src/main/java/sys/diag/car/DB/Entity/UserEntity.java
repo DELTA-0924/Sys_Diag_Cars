@@ -46,14 +46,6 @@ public class UserEntity {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
-    @Ignore
-    public UserEntity(long id, String name, String email, String avatar) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.avatar = avatar;
-
-    }
 
 
     public void setAvatar(String avatar) {

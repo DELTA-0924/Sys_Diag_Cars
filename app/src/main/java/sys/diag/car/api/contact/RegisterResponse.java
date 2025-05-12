@@ -9,6 +9,7 @@ public class RegisterResponse
     private String created_at;
     private String updated_at;
 
+
     public RegisterResponse(String uid, String username, String email, String is_verified, String created_at, String updated_at) {
         this.uid = uid;
         this.username = username;

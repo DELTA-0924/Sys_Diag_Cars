@@ -2,6 +2,7 @@ package sys.diag.car.activity;
 
 import static android.widget.Toast.LENGTH_LONG;
 
+import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
 
 import android.content.Intent;
@@ -79,7 +80,7 @@ public class CarCreateActivity extends AppCompatActivity {
                     Toast.makeText(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }
-                carDto=new CarDto(0,mark,model,year,null,"image",currentUser.getId());
+                carDto=new CarDto(0,mark,model,year,null,NO_IMAGE,currentUser.getId());
                 carViewModel.CreateCar(carDto);
                 //openFileChooser();
                 Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();

@@ -1,11 +1,18 @@
 package sys.diag.car.repository;
 
+import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
+
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -23,6 +30,7 @@ import sys.diag.car.api.contact.LoginRequest;
 import sys.diag.car.api.contact.LoginResponse;
 import sys.diag.car.api.contact.RegisterRequest;
 import sys.diag.car.api.contact.RegisterResponse;
+import sys.diag.car.api.contact.ResponseContact;
 import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
 
@@ -109,7 +117,16 @@ public class UserRepository {
                     liveData.postValue(Result.success(response.body()));
                 }
                 else {
-                    liveData.postValue(Result.error("Ошибка при регистрации"+response.code(),null));
+                    try{
+                        Gson gson = new Gson();
+                        String responseRow =  response.errorBody().string();
+                        ResponseContact responseContact = gson.fromJson(responseRow, ResponseContact.class);
+                        liveData.postValue(Result.error(responseContact.getDetail(),null));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
 
@@ -134,7 +151,15 @@ public class UserRepository {
 
                 }
                 else {
-                    liveData.postValue(Result.error("Ошибка при авторизации"+response.code(),null));
+                    try{
+                        Gson gson = new Gson();
+                        String responseRow =  response.errorBody().string();
+                        ResponseContact responseContact = gson.fromJson(responseRow, ResponseContact.class);
+                        liveData.postValue(Result.error(responseContact.getDetail(),null));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+
                 }
             }
 
@@ -163,7 +188,7 @@ public class UserRepository {
                Long.parseLong(loginResponse.getUser().getUid()),
                 loginResponse.getUser().getUsername(),
                 loginResponse.getUser().getEmail(),
-                "image",
+                NO_IMAGE,
                 loginResponse.getAccess_token(),
                 loginResponse.getRefresh_token());
 
@@ -174,7 +199,9 @@ public class UserRepository {
         return new UserEntity(userDto.getId(),
                 userDto.getName(),
                 userDto.getEmail(),
-                userDto.getImagePath()
+                userDto.getImagePath(),
+                userDto.getAccessToken(),
+                userDto.getRefreshToken()
         );
     }
 

@@ -4,6 +4,17 @@ public class LoginResponse {
     private String message;
     private String access_token;
     private String refresh_token;
+    private String status_code;
+    private String detail;
+
+    public String getStatus_code() {
+        return status_code;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
     private User user;
 
     public User getUser() {

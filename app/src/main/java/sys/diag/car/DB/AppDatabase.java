@@ -12,7 +12,7 @@ import sys.diag.car.DB.Entity.CarEntity;
 import sys.diag.car.DB.Entity.UserEntity;
 
 
-@Database(entities={UserEntity.class, CarEntity.class},version=6)
+@Database(entities={UserEntity.class, CarEntity.class},version=7)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDAO userDAO();
     public abstract CarDAO carDAO();

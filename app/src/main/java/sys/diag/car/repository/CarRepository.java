@@ -110,7 +110,7 @@ public class CarRepository {
                         .collect(Collectors.toList());
 
                 Call<ResponseContact> call = apiService.synchronizeData("Bearer " + token, carRequest);
-                List<MultipartBody.Part> parts =DataImageUtil.getAllJpgImagesFromInternalStorage(internalDir,carRequest.get(0).getCar_image_path());
+                List<MultipartBody.Part> parts =DataImageUtil.getAllJpgImagesFromInternalStorage(internalDir);
                 Call<ResponseContact> call2 = apiService.uploadImage("Bearer " + token, parts);
                 call.enqueue(new Callback<ResponseContact>() {
                     @Override

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     CardAdapter adapter;
     private ViewPager2 viewPager;
     private ProgressBar loadingUi;
+    private Boolean hasData =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-
-            String uid = String.valueOf(user.getId());
-            String token = user.getAccessToken();
-            carViewModel.loadData(token,MainActivity.this.getFilesDir());
+            else {
+                String uid = String.valueOf(user.getId());
+                String token = user.getAccessToken();
+                carViewModel.loadData(token, MainActivity.this.getFilesDir());
+            }
         });
 
         carViewModel.getLoadData().observe(this,result->{
@@ -75,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
         setUp();
         adapter = new CardAdapter(new ArrayList<>(),this);
         carViewModel.getAllCars().observe(this,cars->{
-
+            if(!cars.isEmpty())
+                hasData=true;
             adapter.setCardList(cars);
 
+            Log.e("LIST_CARS","HAS CHANGED");
         });
-
-
 
 
         viewPager.setAdapter(adapter);
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CarDetailActivity.class);
                 intent.putExtra("selectedCar", carDto);
 
-                startActivity(intent);
+                createCarLauncher.launch(intent);
             }
         });
 
@@ -129,5 +131,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final ActivityResultLauncher<Intent> createCarLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
             });
 }

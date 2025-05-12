@@ -1,6 +1,8 @@
 package sys.diag.car.activity;
 
+import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
+import static sys.diag.car.common.DataImageUtil.deleteImagesByName;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,11 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.squareup.picasso.Picasso;
@@ -31,7 +35,10 @@ public class CarDetailActivity extends AppCompatActivity {
     Button btnBack;
     TextView tvMarkCar,tvYearCar,tvIssueBroken;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private AppCompatButton btnGetSensors;
     private final String NO_PREDICTED="Не диагностирован";
+    private TableLayout tbSensors,tbErrorCodes;
+    private View divide1,divide2;
     ImageView ivCar;
     CarDto selectedCar;
     @Override
@@ -44,16 +51,31 @@ public class CarDetailActivity extends AppCompatActivity {
         tvIssueBroken = findViewById(R.id.tvIssueBrokenRes);
         btnBack=findViewById(R.id.btnBackDetail);
         ivCar = findViewById(R.id.ivCarDetail);
+        btnGetSensors = findViewById(R.id.btnGetSensors);
+        tbSensors = findViewById(R.id.TbSensors);
+        tbErrorCodes = findViewById(R.id.TbErrorCodes);
+        divide1 = findViewById(R.id.view3);
+        divide2 = findViewById(R.id.view4);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
             }
         });
         ivCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFileChooser();
+            }
+        });
+        btnGetSensors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setVisibility(View.GONE);
+                tbSensors.setVisibility(View.VISIBLE);
+                tbErrorCodes.setVisibility(View.VISIBLE);
+                divide1.setVisibility(View.VISIBLE);
+                divide2.setVisibility(View.VISIBLE);
             }
         });
         if (getIntent() != null && getIntent().hasExtra("selectedCar")) {
@@ -64,7 +86,7 @@ public class CarDetailActivity extends AppCompatActivity {
                         tvYearCar.setText(car.getYearRelease());
                         tvIssueBroken.setText(car.getIssueBroken() == null ? NO_PREDICTED : car.getIssueBroken());
                         String imagePath = car.getImageUri();
-                        if( imagePath!=null &&!imagePath.equals("No_Data")) {
+                        if( imagePath!=null &&!imagePath.equals(NO_IMAGE)) {
                             Log.e("LOAD_IMAGE",imagePath);
                             Picasso.get()
                                     .load( "file://"+imagePath) // Здесь вызывайте метод, который возвращает URL изображения
@@ -90,11 +112,16 @@ public class CarDetailActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            String internalPath=copyImageToInternalStorage(imageUri,CarDetailActivity.this,selectedCar.getId());
+            if(!selectedCar.getImageUri().equals(NO_IMAGE))
+                deleteImagesByName(CarDetailActivity.this,selectedCar.getImageUri());
+            String imageFileName = selectedCar.getId()+"_Car"+System.currentTimeMillis()+".jpg";
+            String internalPath=copyImageToInternalStorage(imageUri,CarDetailActivity.this,imageFileName);
+
             selectedCar.setImageUri(internalPath);
             Log.e("IMAGE_CAR",selectedCar.getImageUri());
             try {
                 carViewModel.updateCar(selectedCar);
+
             }catch(Exception ex){
                 Log.e("Add Car",ex.getMessage());
             }
@@ -103,8 +130,4 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

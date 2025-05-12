@@ -1,6 +1,7 @@
 package sys.diag.car.activity;
 
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
+import static sys.diag.car.common.DataImageUtil.deleteImagesByName;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -36,7 +37,7 @@ public class UserDetailActivity extends AppCompatActivity {
     private AppCompatButton btnLogout,btnBack,btnSync;
     private TextView joinDate,carCount,email,userName;
     private UserDto userDto;
-    private String token;
+    private String token,refreshToken;
     private ProgressBar loadingUi;
     @Override
     protected void onCreate(Bundle bundle){
@@ -78,7 +79,7 @@ public class UserDetailActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
             }
         });
         btnSync.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +106,7 @@ public class UserDetailActivity extends AppCompatActivity {
         email.setText(user.getEmail());
         userName.setText(user.getName());
         token = user.getAccessToken();
+        refreshToken = user.getRefreshToken();
         loadAvatar(user.getImagePath());
         userDto=user;
    }
@@ -135,7 +137,10 @@ public class UserDetailActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            String internalPath=copyImageToInternalStorage(imageUri,UserDetailActivity.this,userDto.getId());
+
+            String imageFileName = userDto.getId()+"_User"+".jpg";
+            deleteImagesByName(UserDetailActivity.this,imageFileName);
+            String internalPath=copyImageToInternalStorage(imageUri,UserDetailActivity.this,imageFileName);
             userDto.setImagePath(internalPath);
             if(userDto.getImagePath()!=null)
                 Log.e("IMG","Image has but something went wrong");
@@ -148,8 +153,5 @@ public class UserDetailActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         setResult(RESULT_OK, resultIntent);
     }
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+
 }
