@@ -30,6 +30,7 @@ import sys.diag.car.common.OverlapPageTransformer;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.Result;
+import sys.diag.car.dto.UserDto;
 import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.UserViewModel;
 
@@ -53,19 +54,27 @@ public class MainActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         carViewModel= new ViewModelProvider(this).get(CarViewModel.class);
 
-        userViewModel.getCurrent().observe(this,user->{
+        adapter = new CardAdapter(new ArrayList<>(),this);
 
-            if(user==null){
+        carViewModel.getAllCars().observe(this,cars->{
+            if(!cars.isEmpty())
+                hasData =true;
+            adapter.setCardList(cars);
+        });
 
+        userViewModel.getCurrent().observe(this,result->{
+
+            if(result.status == Result.Status.ERROR){
                 Intent intent=new Intent(MainActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
             else {
-                String uid = String.valueOf(user.getId());
+                UserDto user = result.data;
                 String token = user.getAccessToken();
-                carViewModel.loadData(token, MainActivity.this.getFilesDir());
+                if(!hasData)
+                    carViewModel.loadData(token, MainActivity.this.getFilesDir());
             }
         });
 
@@ -75,15 +84,6 @@ public class MainActivity extends AppCompatActivity {
             loadingUi.setVisibility(View.GONE);
         });
         setUp();
-        adapter = new CardAdapter(new ArrayList<>(),this);
-        carViewModel.getAllCars().observe(this,cars->{
-            if(!cars.isEmpty())
-                hasData=true;
-            adapter.setCardList(cars);
-
-            Log.e("LIST_CARS","HAS CHANGED");
-        });
-
 
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(new OverlapPageTransformer());

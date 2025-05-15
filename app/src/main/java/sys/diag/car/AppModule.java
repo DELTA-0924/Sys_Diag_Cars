@@ -16,9 +16,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sys.diag.car.DB.AppDatabase;
 import sys.diag.car.DB.DAO.CarDAO;
+import sys.diag.car.DB.DAO.SensorDAO;
 import sys.diag.car.DB.DAO.UserDAO;
 import sys.diag.car.api.ApiService;
 import sys.diag.car.repository.CarRepository;
+import sys.diag.car.repository.SensorRepository;
 import sys.diag.car.repository.UserRepository;
 
 @Module
@@ -40,6 +42,16 @@ public class AppModule {
     @Singleton
     CarDAO providesCarDAO(AppDatabase db){
         return db.carDAO();
+    }
+    @Provides
+    @Singleton
+    SensorDAO providesSensorDAO(AppDatabase db){ return db.sensorDAO();}
+
+
+    @Provides
+    @Singleton
+    SensorRepository provideSensorRepository(SensorDAO sensorDAO, ApiService apiService){
+        return new SensorRepository(sensorDAO,apiService);
     }
     @Provides
     @Singleton

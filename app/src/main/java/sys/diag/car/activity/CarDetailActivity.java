@@ -28,10 +28,13 @@ import sys.diag.car.DB.DAO.CarDAO;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.viewmodels.CarViewModel;
+import sys.diag.car.viewmodels.SensorViewModel;
+
 @AndroidEntryPoint
 public class CarDetailActivity extends AppCompatActivity {
 
     private CarViewModel carViewModel;
+    private SensorViewModel sensorViewModel;
     Button btnBack;
     TextView tvMarkCar,tvYearCar,tvIssueBroken;
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -46,6 +49,7 @@ public class CarDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_car);
         carViewModel=new ViewModelProvider(this).get(CarViewModel.class);
+        sensorViewModel=new ViewModelProvider(this).get(SensorViewModel.class);
         tvMarkCar = findViewById(R.id.tvMarkCarRes);
         tvYearCar = findViewById(R.id.tvYearReleaseRes);
         tvIssueBroken = findViewById(R.id.tvIssueBrokenRes);

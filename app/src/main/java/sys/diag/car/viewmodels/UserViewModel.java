@@ -37,7 +37,7 @@ public class UserViewModel extends ViewModel {
     public  LiveData<UserDto> Login(String name,String password){
         return this.userRepository.getByName(name);
     }
-    public LiveData <UserDto> getCurrent(){
+    public LiveData <Result<UserDto>> getCurrent(){
         return this.userRepository.getUser();
     }
 

@@ -18,6 +18,7 @@ import sys.diag.car.api.contact.LoginResponse;
 import sys.diag.car.api.contact.RegisterRequest;
 import sys.diag.car.api.contact.RegisterResponse;
 import sys.diag.car.api.contact.ResponseContact;
+import sys.diag.car.api.contact.SensorRequest;
 
 public interface ApiService {
 
@@ -43,4 +44,7 @@ public interface ApiService {
    @Multipart
    @POST("car/upload-image")
    Call<ResponseContact>uploadImage(@Header("Authorization")String token, @Part List<MultipartBody.Part>images);
+   @POST
+   Call<ResponseContact> sendDataSensors(@Header("Authorization")String token, @Body SensorRequest sensorRequest);
+
 }

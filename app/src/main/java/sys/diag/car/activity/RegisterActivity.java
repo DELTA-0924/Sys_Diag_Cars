@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private ProgressBar loadingUI;
     private EditText name,email,password;
+    private TextView goLogin;
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -48,6 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
                 loadingUI.setVisibility(View.VISIBLE);
             }
         });
+        goLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void setUpWidgets(){
         name=findViewById(R.id.editTextName);
@@ -55,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         password=findViewById(R.id.editTextPassword);
         btnRegister=findViewById(R.id.btnRegister);
         loadingUI = findViewById(R.id.loading4);
+        goLogin = findViewById(R.id.tvGoToLogin);
     }
     private UserDto extractData(){
         UserDto userDto= new UserDto(0,name.getText().toString(),

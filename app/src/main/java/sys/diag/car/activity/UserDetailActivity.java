@@ -46,7 +46,7 @@ public class UserDetailActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         setUp();
-        userViewModel.getCurrent().observe(this,user-> loadData(user));
+        userViewModel.getCurrent().observe(this,result-> loadData(result.data));
         userViewModel.getUserCars().observe(this,cars-> {
             carCount.setText(String.valueOf(cars.get(0).cars.size()));
         });

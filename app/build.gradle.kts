@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation(libs.hilt.android)
+
     implementation(libs.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

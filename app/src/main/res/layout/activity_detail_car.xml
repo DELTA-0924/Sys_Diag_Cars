@@ -165,93 +165,93 @@
                         />
 
                     <TableLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/TbSensors"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:visibility="gone"
-                        tools:visibility="visible">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:visibility="gone">
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        <!-- Заголовок -->
+                        <TableRow>
+                            <TextView
+                                android:text="Название датчика"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:padding="8dp"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:layout_height="wrap_content"
+                                android:background="#E0E0E0"/>
 
                             <TextView
-                                android:layout_marginEnd="50dp"
-                                android:text="Темперартура масла"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:text="41"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                                android:text="Значение"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:padding="8dp"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:layout_height="wrap_content"
+                                android:background="#E0E0E0"/>
                         </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:layout_marginEnd="50dp"
-                                android:text="Уровень масла"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:text="41"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                        <!-- Датчики -->
+                        <TableRow>
+                            <TextView android:text="Температура масла" style="@style/SensorCell"/>
+                            <TextView android:text="-- °C" style="@style/ValueCell"/>
                         </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:layout_marginEnd="50dp"
-                                android:text="Темперартура двигателя"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:text="41"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                        <TableRow>
+                            <TextView android:text="Температура охлаждающей жидкости" style="@style/SensorCell"/>
+                            <TextView android:text="-- °C" style="@style/ValueCell"/>
                         </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:layout_marginEnd="50dp"
-                                android:text="тепм. охл. жидкости"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:text="41"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                        <TableRow>
+                            <TextView android:text="Обороты двигателя (RPM)" style="@style/SensorCell"/>
+                            <TextView android:text="-- об/мин" style="@style/ValueCell"/>
                         </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        <TableRow>
+                            <TextView android:text="Расход топлива" style="@style/SensorCell"/>
+                            <TextView android:text="-- л/ч" style="@style/ValueCell"/>
+                        </TableRow>
 
-                            <TextView
-                                android:layout_marginEnd="50dp"
-                                android:text="уровень охл. жидкости"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                        <TableRow>
+                            <TextView android:text="Напряжение генератора" style="@style/SensorCell"/>
+                            <TextView android:text="-- В" style="@style/ValueCell"/>
+                        </TableRow>
 
-                            <TextView
-                                android:text="41"
-                                android:textColor="@color/white"
-                                android:textSize="20sp" />
+                        <TableRow>
+                            <TextView android:text="Расход воздуха (MAF)" style="@style/SensorCell"/>
+                            <TextView android:text="-- г/с" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Температура впускного воздуха (IAT)" style="@style/SensorCell"/>
+                            <TextView android:text="-- °C" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Давление во впускном коллекторе (MAP)" style="@style/SensorCell"/>
+                            <TextView android:text="-- кПа" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Угол открытия дросселя (TPS)" style="@style/SensorCell"/>
+                            <TextView android:text="-- %" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Скорость автомобиля" style="@style/SensorCell"/>
+                            <TextView android:text="-- км/ч" style="@style/ValueCell"/>
                         </TableRow>
 
                     </TableLayout>
+
 
                     <View
                         android:id="@+id/view3"

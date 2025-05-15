@@ -29,6 +29,9 @@ public class CarEntity {
     @ColumnInfo(name="car_synchronized")
     private Boolean _synchronized;
 
+    @ColumnInfo(name="user_id")
+    private long userId;
+
     public void set_synchronized(Boolean _synchronized) {
         this._synchronized = _synchronized;
     }
@@ -44,9 +47,6 @@ public class CarEntity {
     public long getUserId() {
         return userId;
     }
-
-    @ColumnInfo(name="user_id")
-    private long userId;
     public CarEntity(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imageUri,long userId,Boolean _synchronized) {
         this.id = id;
         this.markCar = markCar;

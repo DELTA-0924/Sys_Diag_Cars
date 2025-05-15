@@ -55,8 +55,8 @@ public class CarCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_car);
         carViewModel=new ViewModelProvider(this).get(CarViewModel.class);
         userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
-        userViewModel.getCurrent().observe(this,user->{
-        currentUser=user;
+        userViewModel.getCurrent().observe(this,result->{
+            currentUser=result.data;
         });
         btnBack=findViewById(R.id.btnBack);
         btnCreate=findViewById(R.id.btnCreate);

@@ -60,11 +60,12 @@ public class UserRepository {
     }
 
 
-    public LiveData<UserDto> getUser(){
+    public LiveData<Result<UserDto>> getUser(){
         return Transformations.map(this.userDAO.getUser(),user->
             Optional.ofNullable(user)
                     .map(this::convertToUserDto)
-                    .orElse(null)
+                    .map(Result::success)
+                    .orElse(Result.error("USER_NOT_FOUND",null))
                 );
     }
 

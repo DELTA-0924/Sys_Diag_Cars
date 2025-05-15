@@ -52,12 +52,12 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
 
             }
-            loadingUi.setVisibility(View.INVISIBLE);
+
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingUi.setVisibility(View.VISIBLE);
+
                 String passwordStr=password.getText().toString();
                 String userNameStr=userName.getText().toString();
                 userViewModel.login(userNameStr,passwordStr);
