@@ -1,9 +1,15 @@
 package sys.diag.car;
 
 import android.app.Application;
+import android.bluetooth.BluetoothSocket;
 
 import androidx.room.Room;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.annotation.Signed;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -19,6 +25,9 @@ import sys.diag.car.DB.DAO.CarDAO;
 import sys.diag.car.DB.DAO.SensorDAO;
 import sys.diag.car.DB.DAO.UserDAO;
 import sys.diag.car.api.ApiService;
+import sys.diag.car.bluetooth.BlueToothConnection;
+import sys.diag.car.obd.ObdAdapter;
+import sys.diag.car.obd.ObdSession;
 import sys.diag.car.repository.CarRepository;
 import sys.diag.car.repository.SensorRepository;
 import sys.diag.car.repository.UserRepository;
@@ -57,6 +66,16 @@ public class AppModule {
     @Singleton
     UserRepository provideUserRepository(UserDAO userDAO,ApiService apiService){
         return new UserRepository(userDAO,apiService);
+    }
+    @Provides
+    @Singleton
+    BlueToothConnection providesBlueToothConnection(){
+        return new BlueToothConnection();
+    }
+    @Provides
+    @Singleton
+    ObdSession provideObdSession() {
+        return new ObdSession();
     }
     @Provides
     @Singleton

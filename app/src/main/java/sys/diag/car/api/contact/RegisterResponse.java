@@ -2,44 +2,27 @@ package sys.diag.car.api.contact;
 
 public class RegisterResponse
 {
-    private String uid;
-    private String username;
-    private String  email;
-    private String is_verified;
-    private String created_at;
-    private String updated_at;
+    public ResponseContact message;
+    public UserResponse user;
 
-
-    public RegisterResponse(String uid, String username, String email, String is_verified, String created_at, String updated_at) {
-        this.uid = uid;
-        this.username = username;
-        this.email = email;
-        this.is_verified = is_verified;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+    public RegisterResponse(ResponseContact message, UserResponse user) {
+        this.message = message;
+        this.user   = user;
     }
 
-    public String getUid() {
-        return uid;
+    public void setMessage(ResponseContact message) {
+        this.message = message;
     }
 
-    public String getUsername() {
-        return username;
+    public void setUser(UserResponse user) {
+        this.user = user;
     }
 
-    public String getEmail() {
-        return email;
+    public ResponseContact getMessage() {
+        return message;
     }
 
-    public String getIs_verified() {
-        return is_verified;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public String getUpdated_at() {
-        return updated_at;
+    public UserResponse getUser() {
+        return user;
     }
 }

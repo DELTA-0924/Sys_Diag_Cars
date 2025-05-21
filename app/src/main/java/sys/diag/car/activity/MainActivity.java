@@ -1,7 +1,12 @@
 package sys.diag.car.activity;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,40 +21,60 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.adapter.CardAdapter;
 import sys.diag.car.DB.DataBaseHelper;
+import sys.diag.car.bluetooth.SocketCallback;
 import sys.diag.car.common.DataImageUtil;
 import sys.diag.car.common.OverlapPageTransformer;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
+import sys.diag.car.obd.ObdAdapter;
+import sys.diag.car.obd.ObdSession;
 import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.UserViewModel;
+import sys.diag.car.bluetooth.BlueToothConnection;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
+    private static final String OBD_II = "OBDII";
     ImageView mainIocn;
     private CarViewModel carViewModel;
+    @Inject
+     BlueToothConnection blueToothConnection;
+    @Inject
+    ObdSession obdSession;
+
+
     private UserViewModel userViewModel;
-    private BluetoothAdapter blueToothAdapter=BluetoothAdapter.getDefaultAdapter();
-    private Button btnCreateCar;
+    private AppCompatButton btnCreateCar,btnOnBlueTooth;
     CardAdapter adapter;
     private ViewPager2 viewPager;
     private ProgressBar loadingUi;
     private Boolean hasData =false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+
+
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         carViewModel= new ViewModelProvider(this).get(CarViewModel.class);
@@ -73,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
             else {
                 UserDto user = result.data;
                 String token = user.getAccessToken();
-                if(!hasData)
-                    carViewModel.loadData(token, MainActivity.this.getFilesDir());
+                carViewModel.loadData(token, MainActivity.this.getFilesDir());
+                loadingUi.setVisibility(View.VISIBLE);
             }
         });
 
@@ -117,6 +142,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnOnBlueTooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                blueToothConnect();
+                loadingUi.setVisibility(View.VISIBLE);
+            }
+        });
 
     }
 
@@ -125,12 +157,48 @@ public class MainActivity extends AppCompatActivity {
         btnCreateCar=findViewById(R.id.btnCreateProfile);
         mainIocn=findViewById(R.id.imageView);
         loadingUi=findViewById(R.id.loading1);
+        btnOnBlueTooth=findViewById(R.id.btnOnBluewTooth);
     }
-
-
-
     private final ActivityResultLauncher<Intent> createCarLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-
             });
+    void blueToothConnect(){
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+        }, REQUEST_BLUETOOTH_PERMISSIONS);
+
+        blueToothConnection = new BlueToothConnection();
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Permission denied");
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                    REQUEST_BLUETOOTH_PERMISSIONS);
+            return;
+        }
+
+        blueToothConnection.findObdDevice(OBD_II);
+            blueToothConnection.connectToObdDevice(new SocketCallback() {
+            @Override
+            public void onSocketReady(BluetoothSocket socket) {
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "Соединение установлено", Toast.LENGTH_SHORT).show();
+                    loadingUi.setVisibility(View.GONE);
+                    obdSession.setSocket(socket);
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(()->{
+                    Toast.makeText(MainActivity.this, "Failed to connect to OBD device", Toast.LENGTH_LONG).show();
+                    loadingUi.setVisibility(View.GONE);
+                });
+            }
+        });
+
+
+
+    }
 }

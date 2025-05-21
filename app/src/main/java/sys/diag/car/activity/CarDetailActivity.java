@@ -1,9 +1,11 @@
 package sys.diag.car.activity;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
 import static sys.diag.car.common.DataImageUtil.deleteImagesByName;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +23,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.pires.obd.exceptions.NoDataException;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import dagger.hilt.android.AndroidEntryPoint;
+import javax.inject.Inject;
 import sys.diag.car.DB.DAO.CarDAO;
 import sys.diag.car.R;
+import sys.diag.car.bluetooth.BlueToothConnection;
+import sys.diag.car.bluetooth.SensorAction;
 import sys.diag.car.dto.CarDto;
+import sys.diag.car.obd.ObdAdapter;
+import sys.diag.car.obd.ObdSession;
 import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.SensorViewModel;
 
@@ -42,24 +55,33 @@ public class CarDetailActivity extends AppCompatActivity {
     private final String NO_PREDICTED="Не диагностирован";
     private TableLayout tbSensors,tbErrorCodes;
     private View divide1,divide2;
+
+
+     ObdAdapter obdAdapter;
+     @Inject
+    ObdSession obdSession;
+
     ImageView ivCar;
     CarDto selectedCar;
+    private TextView sensor;
     @Override
     protected void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_car);
+
+        BluetoothSocket socket = obdSession.getSocket();
+
+         obdAdapter = new ObdAdapter(socket);
+
+
         carViewModel=new ViewModelProvider(this).get(CarViewModel.class);
         sensorViewModel=new ViewModelProvider(this).get(SensorViewModel.class);
-        tvMarkCar = findViewById(R.id.tvMarkCarRes);
-        tvYearCar = findViewById(R.id.tvYearReleaseRes);
-        tvIssueBroken = findViewById(R.id.tvIssueBrokenRes);
-        btnBack=findViewById(R.id.btnBackDetail);
-        ivCar = findViewById(R.id.ivCarDetail);
-        btnGetSensors = findViewById(R.id.btnGetSensors);
-        tbSensors = findViewById(R.id.TbSensors);
-        tbErrorCodes = findViewById(R.id.TbErrorCodes);
-        divide1 = findViewById(R.id.view3);
-        divide2 = findViewById(R.id.view4);
+
+        setup();
+
+
+
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +97,26 @@ public class CarDetailActivity extends AppCompatActivity {
         btnGetSensors.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 v.setVisibility(View.GONE);
+
+                try{
+                    Thread.sleep(1500);
+                    obdAdapter.initializeObdProtocol();
+                } catch (InterruptedException e){
+                    Toast.makeText(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
+                }
+                catch (IOException e){
+                    Toast.makeText(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
+                }
+                catch (NullPointerException e){
+                    Toast.makeText(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
+                }
                 tbSensors.setVisibility(View.VISIBLE);
                 tbErrorCodes.setVisibility(View.VISIBLE);
                 divide1.setVisibility(View.VISIBLE);
                 divide2.setVisibility(View.VISIBLE);
+                extractSensors();
             }
         });
         if (getIntent() != null && getIntent().hasExtra("selectedCar")) {
@@ -133,5 +170,48 @@ public class CarDetailActivity extends AppCompatActivity {
         }
     }
 
+    void setup(){
+        tvMarkCar = findViewById(R.id.tvMarkCarRes);
+        tvYearCar = findViewById(R.id.tvYearReleaseRes);
+        tvIssueBroken = findViewById(R.id.tvIssueBrokenRes);
+        btnBack=findViewById(R.id.btnBackDetail);
+        ivCar = findViewById(R.id.ivCarDetail);
+        btnGetSensors = findViewById(R.id.btnGetSensors);
+        tbSensors = findViewById(R.id.TbSensors);
+        tbErrorCodes = findViewById(R.id.TbErrorCodes);
+        divide1 = findViewById(R.id.view3);
+        divide2 = findViewById(R.id.view4);
+    }
 
+    private void extractSensors() {
+        Map<String, SensorAction> actionMap = new LinkedHashMap<>();
+        actionMap.put("temp_oil",obdAdapter::OilTempCommand);
+        actionMap.put("temp_cool",obdAdapter::EngineCoolTemp);
+        actionMap.put("RPM",obdAdapter::EngineRpm);
+        actionMap.put("fuel_rate",obdAdapter::calculateFuelConsumption);
+        actionMap.put("voltage",obdAdapter::Voltage);
+        actionMap.put("MAF",obdAdapter::MAF);
+        actionMap.put("IAT",obdAdapter::IntakeAirTemperature);
+        actionMap.put("MAP",obdAdapter::IntakeManifoldPressureCommand);
+        actionMap.put("TPS",obdAdapter::ThrottlePos);
+        actionMap.put("speed",obdAdapter::Speed);
+        actionMap.put("fuel_trim",obdAdapter::getFuelTrim);
+        actionMap.put("time_advance",obdAdapter::getTimingAdvance);
+        int i = 1;
+        for (SensorAction action : actionMap.values()) {
+            String sensorId = "sensor" + i;
+            int resID = getResources().getIdentifier(sensorId, "id", getPackageName());
+            TextView sensor = findViewById(resID);
+            if (sensor != null) {
+                try {
+                    String result = action.execute();
+                    sensor.setText(result);
+                }catch (NoDataException e){
+                    Log.e("SENSOR",e.getMessage());
+                }
+
+            }
+            i++;
+        }
+    }
 }

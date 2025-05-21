@@ -68,7 +68,7 @@
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColorHint="@color/light_gray"
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
@@ -99,30 +99,41 @@
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColorHint="@color/light_gray"
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
                     app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editTextPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_btn_login2"
+
                     android:ems="10"
                     android:hint="password"
-                    android:inputType="textPassword"
+
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColorHint="@color/light_gray"
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="@+id/view5"
                     app:layout_constraintStart_toStartOf="@+id/view5"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/white"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/InnereditTextPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/white"
+                        android:inputType="textPassword"
+
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnRegister"

@@ -94,7 +94,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/vp_cards"
         app:layout_constraintEnd_toEndOf="@+id/vp_cards"
         app:layout_constraintStart_toEndOf="@+id/vp_cards"

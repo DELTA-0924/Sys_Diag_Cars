@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
@@ -24,7 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
     private UserViewModel userViewmodel;
     private Button btnRegister;
     private ProgressBar loadingUI;
-    private EditText name,email,password;
+    private EditText name,email;
+    private TextInputEditText password;
     private TextView goLogin;
     @Override
     protected void onCreate(Bundle bundle){
@@ -35,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         userViewmodel.getRegisterResult().observe(RegisterActivity.this,result->{
             if(result.status == Result.Status.SUCCESS){
                 Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                Toast.makeText(RegisterActivity.this,  result.data.getMessage().getDetail(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
             else if(result.status == Result.Status.ERROR){
@@ -61,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void setUpWidgets(){
         name=findViewById(R.id.editTextName);
         email=findViewById(R.id.editTextEmail);
-        password=findViewById(R.id.editTextPassword);
+        password=findViewById(R.id.InnereditTextPassword);
         btnRegister=findViewById(R.id.btnRegister);
         loadingUI = findViewById(R.id.loading4);
         goLogin = findViewById(R.id.tvGoToLogin);

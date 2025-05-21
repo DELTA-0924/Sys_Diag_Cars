@@ -42,7 +42,7 @@ android {
 
 dependencies {
     implementation(libs.hilt.android)
-
+    implementation(libs.obd.java.api)
     implementation(libs.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

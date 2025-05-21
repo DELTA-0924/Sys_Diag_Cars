@@ -202,52 +202,62 @@
                         <!-- Датчики -->
                         <TableRow>
                             <TextView android:text="Температура масла" style="@style/SensorCell"/>
-                            <TextView android:text="-- °C" style="@style/ValueCell"/>
+                            <TextView android:id="@+id/sensor1" android:text="-- °C" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Температура охлаждающей жидкости" style="@style/SensorCell"/>
-                            <TextView android:text="-- °C" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor2" android:text="-- °C" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Обороты двигателя (RPM)" style="@style/SensorCell"/>
-                            <TextView android:text="-- об/мин" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor3" android:text="-- об/мин" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Расход топлива" style="@style/SensorCell"/>
-                            <TextView android:text="-- л/ч" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor4" android:text="-- л/ч" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Напряжение генератора" style="@style/SensorCell"/>
-                            <TextView android:text="-- В" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor5" android:text="-- В" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Расход воздуха (MAF)" style="@style/SensorCell"/>
-                            <TextView android:text="-- г/с" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor6" android:text="-- г/с" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Температура впускного воздуха (IAT)" style="@style/SensorCell"/>
-                            <TextView android:text="-- °C" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor7" android:text="-- °C" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Давление во впускном коллекторе (MAP)" style="@style/SensorCell"/>
-                            <TextView android:text="-- кПа" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor8" android:text="-- кПа" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Угол открытия дросселя (TPS)" style="@style/SensorCell"/>
-                            <TextView android:text="-- %" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor9" android:text="-- %" style="@style/ValueCell"/>
                         </TableRow>
 
                         <TableRow>
                             <TextView android:text="Скорость автомобиля" style="@style/SensorCell"/>
-                            <TextView android:text="-- км/ч" style="@style/ValueCell"/>
+                            <TextView  android:id="@+id/sensor10" android:text="-- км/ч" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Коррекция топлива" style="@style/SensorCell"/>
+                            <TextView  android:id="@+id/sensor11" android:text="-- %" style="@style/ValueCell"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView android:text="Угол опережения зажигания" style="@style/SensorCell"/>
+                            <TextView  android:id="@+id/sensor12" android:text="-- °" style="@style/ValueCell"/>
                         </TableRow>
 
                     </TableLayout>

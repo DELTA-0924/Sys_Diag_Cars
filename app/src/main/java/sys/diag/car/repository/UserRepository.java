@@ -213,20 +213,9 @@ public class UserRepository {
                 userDto.getPassword());
     }
 
-    private LoginRequest convertToLoginRequest(UserDto userDto){
-        return new LoginRequest(
-                userDto.getEmail(),
-                userDto.getPassword());
-    }
 
 
-    private UserDto convertToUserDtoFromRegisterResponse(RegisterResponse registerResponse){
-        return new UserDto(
-                Long.parseLong(registerResponse.getUid()),
-                registerResponse.getUsername(),
-                registerResponse.getEmail(),
-                "userPassword",
-                "image");
-    }
+
+
 
 }

@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.Optional;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -25,7 +27,8 @@ import sys.diag.car.viewmodels.UserViewModel;
 public class LoginActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private AppCompatButton btnLogin;
-    private EditText userName,password;
+    private EditText userName;
+    private TextInputEditText password;
     private TextView textRegister;
     private ProgressBar loadingUi;
     @Override
@@ -68,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setUpWidgets(){
         btnLogin = findViewById(R.id.btnLogin);
         userName = findViewById(R.id.editTextNameLogin);
-        password = findViewById(R.id.editTextPasswordLogin);
+        password = findViewById(R.id.InnereditTextPasswordLogin);
         textRegister = findViewById(R.id.tvMessage2);
         loadingUi  = findViewById(R.id.loading3);
     }
