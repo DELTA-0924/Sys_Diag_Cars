@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import sys.diag.car.DB.Entity.SensorEntity;
+import sys.diag.car.api.contact.PredictionResponse;
 import sys.diag.car.api.contact.ResponseContact;
 import sys.diag.car.dto.Result;
 import sys.diag.car.dto.SensorDto;
@@ -18,7 +19,7 @@ import sys.diag.car.repository.SensorRepository;
 @HiltViewModel
 public class SensorViewModel  extends ViewModel {
     private final SensorRepository  sensorRepository;
-    private final MutableLiveData<ResponseContact> sendSensorsResult = new MutableLiveData<>();
+    private final MutableLiveData<PredictionResponse> sendSensorsResult = new MutableLiveData<>();
     @Inject
     public SensorViewModel(SensorRepository sensorRepository){
         this.sensorRepository = sensorRepository;
@@ -32,8 +33,12 @@ public class SensorViewModel  extends ViewModel {
     public void exctractSensors(SensorDto sensor){
         this.sensorRepository.insertSensor(sensor);
     }
-    public void sendSensors(String token,long carId){
-        this.sensorRepository.sendData(sendSensorsResult,carId,token);
+
+    public void sendSensors(long carId){
+        this.sensorRepository.sendData(sendSensorsResult,carId);
+    }
+    public  MutableLiveData<PredictionResponse> getSendSensorsResult(){
+        return this.sendSensorsResult;
     }
 
 }

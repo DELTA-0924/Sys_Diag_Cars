@@ -1,6 +1,10 @@
 package sys.diag.car.activity;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
+
+import static sys.diag.car.common.Utility.GUEST;
+import static sys.diag.car.common.Utility.OBD_II;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -33,6 +37,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import sys.diag.car.adapter.CardAdapter;
 import sys.diag.car.DB.DataBaseHelper;
 import sys.diag.car.bluetooth.SocketCallback;
@@ -51,7 +56,7 @@ import sys.diag.car.bluetooth.BlueToothConnection;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
-    private static final String OBD_II = "OBDII";
+
     ImageView mainIocn;
     private CarViewModel carViewModel;
     @Inject
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private ProgressBar loadingUi;
     private Boolean hasData =false;
-
+    private UserDto user=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         carViewModel.getAllCars().observe(this,cars->{
             if(!cars.isEmpty())
                 hasData =true;
+            for(CarDto car :cars){
+                Log.w("Car id",String.valueOf(car.getId()));
+            }
             adapter.setCardList(cars);
         });
 
@@ -94,18 +102,21 @@ public class MainActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+
             }
             else {
-                UserDto user = result.data;
-                String token = user.getAccessToken();
-                carViewModel.loadData(token, MainActivity.this.getFilesDir());
-                loadingUi.setVisibility(View.VISIBLE);
+                user = result.data;
+                if(!user.getName().equals(GUEST)) {
+                    String token = user.getAccessToken();
+                    carViewModel.loadData(token, MainActivity.this.getFilesDir());
+                    loadingUi.setVisibility(View.VISIBLE);
+                }
             }
         });
 
         carViewModel.getLoadData().observe(this,result->{
             if(result.status == Result.Status.ERROR && result.data==null)
-                Toast.makeText(this,result.message,Toast.LENGTH_LONG).show();
+                Toasty.warning(this,result.message, LENGTH_LONG).show();
             loadingUi.setVisibility(View.GONE);
         });
         setUp();
@@ -116,11 +127,25 @@ public class MainActivity extends AppCompatActivity {
         mainIocn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, UserDetailActivity.class);
-                createCarLauncher.launch(intent);
+                if(user!=null && !user.getName().equals(GUEST)) {
+                    Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
+                    createCarLauncher.launch(intent);
+                }else {
+
+                    Toasty.info(MainActivity.this,"Для входа личный кабинет авторизуйтесь",Toasty.LENGTH_LONG).show();
+                    Toasty.info(MainActivity.this,"Удерживайте картинку что бы авторизоваться",Toasty.LENGTH_LONG).show();
+                }
             }
         });
+        mainIocn.setOnLongClickListener(v->{
+            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+            userViewModel.Logout(user);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return true;
 
+        });
 
         btnCreateCar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
         blueToothConnection = new BlueToothConnection();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("Permission denied");
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+            Toasty.warning(MainActivity.this,"Permission denied",Toasty.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.BLUETOOTH_CONNECT},
                     REQUEST_BLUETOOTH_PERMISSIONS);
@@ -183,7 +207,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSocketReady(BluetoothSocket socket) {
                 runOnUiThread(() -> {
-                    Toast.makeText(MainActivity.this, "Соединение установлено", Toast.LENGTH_SHORT).show();
+
+                    Toasty.success(MainActivity.this,"Соединение установлено",Toasty.LENGTH_LONG).show();
                     loadingUi.setVisibility(View.GONE);
                     obdSession.setSocket(socket);
                 });
@@ -192,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Exception e) {
                 runOnUiThread(()->{
-                    Toast.makeText(MainActivity.this, "Failed to connect to OBD device", Toast.LENGTH_LONG).show();
+
+                    Toasty.warning(MainActivity.this,"Failed to connect to OBD device",Toasty.LENGTH_LONG).show();
                     loadingUi.setVisibility(View.GONE);
                 });
             }

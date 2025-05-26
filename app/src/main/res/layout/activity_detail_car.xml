@@ -112,6 +112,22 @@
                     android:layout_marginBottom="20dp"
                     android:text="Аккп"
                     android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/tvKmToFailure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Пробег до возможной неиспраности"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvKmToFailureRes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="км"
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -165,100 +181,152 @@
                         />
 
                     <TableLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/TbSensors"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
-                        android:visibility="gone">
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
                         <!-- Заголовок -->
-                        <TableRow>
-                            <TextView
-                                android:text="Название датчика"
-                                android:textStyle="bold"
-                                android:textSize="16sp"
-                                android:padding="8dp"
-                                android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:layout_height="wrap_content"
-                                android:background="#E0E0E0"/>
+                        <TableRow tools:visibility="visible">
 
                             <TextView
-                                android:text="Значение"
-                                android:textStyle="bold"
-                                android:textSize="16sp"
-                                android:padding="8dp"
-                                android:layout_weight="1"
                                 android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#E0E0E0"
                                 android:ellipsize="end"
                                 android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="@string/sensor_table_header_name"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:background="#E0E0E0"/>
+                                android:layout_weight="1"
+                                android:background="#E0E0E0"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="@string/sensor_table_header_value"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
                         </TableRow>
 
-                        <!-- Датчики -->
-                        <TableRow>
-                            <TextView android:text="Температура масла" style="@style/SensorCell"/>
-                            <TextView android:id="@+id/sensor1" android:text="-- °C" style="@style/ValueCell"/>
-                        </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Температура охлаждающей жидкости" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor2" android:text="-- °C" style="@style/ValueCell"/>
-                        </TableRow>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_coolant_temp" />
 
-                        <TableRow>
-                            <TextView android:text="Обороты двигателя (RPM)" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor3" android:text="-- об/мин" style="@style/ValueCell"/>
-                        </TableRow>
-
-                        <TableRow>
-                            <TextView android:text="Расход топлива" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor4" android:text="-- л/ч" style="@style/ValueCell"/>
+                            <TextView
+                                android:id="@+id/sensor1"
+                                style="@style/ValueCell"
+                                android:text="-- °C" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Напряжение генератора" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor5" android:text="-- В" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_rpm" />
+
+                            <TextView
+                                android:id="@+id/sensor2"
+                                style="@style/ValueCell"
+                                android:text="-- об/мин" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Расход воздуха (MAF)" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor6" android:text="-- г/с" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_fuel_rate" />
+
+                            <TextView
+                                android:id="@+id/sensor3"
+                                style="@style/ValueCell"
+                                android:text="-- л/ч" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Температура впускного воздуха (IAT)" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor7" android:text="-- °C" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_voltage" />
+
+                            <TextView
+                                android:id="@+id/sensor4"
+                                style="@style/ValueCell"
+                                android:text="-- В" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Давление во впускном коллекторе (MAP)" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor8" android:text="-- кПа" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_maf" />
+
+                            <TextView
+                                android:id="@+id/sensor5"
+                                style="@style/ValueCell"
+                                android:text="-- г/с" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Угол открытия дросселя (TPS)" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor9" android:text="-- %" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_iat" />
+
+                            <TextView
+                                android:id="@+id/sensor6"
+                                style="@style/ValueCell"
+                                android:text="-- °C" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Скорость автомобиля" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor10" android:text="-- км/ч" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_tps" />
+
+                            <TextView
+                                android:id="@+id/sensor7"
+                                style="@style/ValueCell"
+                                android:text="-- %" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Коррекция топлива" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor11" android:text="-- %" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_speed" />
+
+                            <TextView
+                                android:id="@+id/sensor8"
+                                style="@style/ValueCell"
+                                android:text="-- км/ч" />
                         </TableRow>
 
                         <TableRow>
-                            <TextView android:text="Угол опережения зажигания" style="@style/SensorCell"/>
-                            <TextView  android:id="@+id/sensor12" android:text="-- °" style="@style/ValueCell"/>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_fuel_trim" />
+
+                            <TextView
+                                android:id="@+id/sensor9"
+                                style="@style/ValueCell"
+                                android:text="-- %" />
                         </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                style="@style/SensorCell"
+                                android:text="@string/sensor_ignition_advance" />
+
+                            <TextView
+                                android:id="@+id/sensor10"
+                                style="@style/ValueCell"
+                                android:text="-- °" />
+                        </TableRow>
+
 
                     </TableLayout>
 
@@ -296,6 +364,15 @@
 
 
                     </TableLayout>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnSendSensors"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_btn_login"
+                        android:textColor = "@color/white"
+                        android:text="Получить прогноз" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

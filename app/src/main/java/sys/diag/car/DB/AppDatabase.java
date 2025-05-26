@@ -14,7 +14,7 @@ import sys.diag.car.DB.Entity.SensorEntity;
 import sys.diag.car.DB.Entity.UserEntity;
 
 
-@Database(entities={UserEntity.class, CarEntity.class, SensorEntity.class},version=10)
+@Database(entities={UserEntity.class, CarEntity.class, SensorEntity.class},version=15)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDAO userDAO();
     public abstract CarDAO carDAO();

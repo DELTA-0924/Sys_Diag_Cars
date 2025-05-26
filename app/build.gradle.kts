@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation(libs.hilt.android)
+    implementation(libs.toasty)
     implementation(libs.obd.java.api)
     implementation(libs.core)
     implementation(libs.retrofit)

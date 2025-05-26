@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import com.github.pires.obd.commands.SpeedCommand;
 import com.github.pires.obd.commands.control.ModuleVoltageCommand;
 import com.github.pires.obd.commands.control.TimingAdvanceCommand;
+import com.github.pires.obd.commands.control.TroubleCodesCommand;
 import com.github.pires.obd.commands.engine.MassAirFlowCommand;
 import com.github.pires.obd.commands.engine.OilTempCommand;
 import com.github.pires.obd.commands.engine.RPMCommand;
@@ -60,69 +61,69 @@ public class ObdAdapter {
         this.out = socket.getOutputStream();
 
     }
-    public String EngineRpm() {
+    public int EngineRpm() {
         try {
             RPMCommand rpmCommand = new RPMCommand();
             rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
-            return rpmCommand.getFormattedResult();
+            return rpmCommand.getRPM();
         } catch (IOException | InterruptedException e) {
             Log.e(TAG, "Failed to get RPM", e);
-            return "Error";
+            return 404;
         }
     }
 
     /**
      * Получить текущую скорость автомобиля.
      */
-    public String Speed() {
+    public int Speed() {
         try {
             SpeedCommand speedCommand = new SpeedCommand();
             speedCommand.run(socket.getInputStream(), socket.getOutputStream());
-            return speedCommand.getFormattedResult();
+            return speedCommand.getMetricSpeed();
         } catch (IOException | InterruptedException e) {
             Log.e(TAG, "Failed to get Speed", e);
-            return "Error";
+            return 404;
         }
     }
-    public String EngineCoolTemp(){
+    public float EngineCoolTemp(){
         try{
             EngineCoolantTemperatureCommand coolTempCommand=new EngineCoolantTemperatureCommand();
             coolTempCommand.run(socket.getInputStream(),socket.getOutputStream());
-            return coolTempCommand.getFormattedResult();
+            return coolTempCommand.getTemperature();
         }catch(IOException | InterruptedException e){
             Log.e(TAG,"Failed to get Coolant tempereture",e);
-            return "Error";
+            return 404;
         }
     }
-    public String Voltage(){
+    public double Voltage(){
         try{
             ModuleVoltageCommand moduleVoltageCommand = new ModuleVoltageCommand();
             moduleVoltageCommand.run(socket.getInputStream(),socket.getOutputStream());
-            return moduleVoltageCommand.getFormattedResult();
+            return moduleVoltageCommand.getVoltage();
         }catch(IOException | InterruptedException e){
             Log.e(TAG,"Failed to get Coolant tempereture",e);
-            return "Error";
+            return 404;
         }
     }
-    public String MAF(){
+    public Double MAF(){
         try{
             MassAirFlowCommand mafCommand=new MassAirFlowCommand();
             mafCommand.run(socket.getInputStream(),socket.getOutputStream());
-            return mafCommand.getFormattedResult();
+            return mafCommand.getMAF();
         }catch(IOException |InterruptedException e){
             Log.e(TAG,"Failed to get Mass Air Flow",e);
-            return "Error";
+            return 404d;
         }
     }
-    public String IntakeAirTemperature(){
+    public float IntakeAirTemperature(){
         try{
             AirIntakeTemperatureCommand getAirIntakeTempCommad = new AirIntakeTemperatureCommand ();
             getAirIntakeTempCommad.run(socket.getInputStream(),socket.getOutputStream());
 
-            return getAirIntakeTempCommad.getFormattedResult();
+            return getAirIntakeTempCommad.getTemperature();
         }catch(IOException |InterruptedException e){
             Log.e(TAG,"Failed to get Intake Air Temperature",e);
-            return "Error";
+            return 404f;
         }
     }
     public String IntakeManifoldPressureCommand(){
@@ -137,18 +138,31 @@ public class ObdAdapter {
         }
     }
 
-    public String ThrottlePos(){
+    public float ThrottlePos(){
         try{
             ThrottlePositionCommand throttlePosCommand=new ThrottlePositionCommand();
             throttlePosCommand.run(socket.getInputStream(),socket.getOutputStream());
-            return throttlePosCommand.getFormattedResult();
+            return throttlePosCommand.getPercentage();
         }catch(IOException |InterruptedException e){
             Log.e(TAG,"Failed to get throttle pos engine",e);
-            return "Error";
+            return 404f;
         }
     }
 
-    public String calculateFuelConsumption() {
+    public String TroubleCode(){
+        String troubleCodes = "";
+        try {
+            TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
+            troubleCodesCommand.run(socket.getInputStream(), socket.getOutputStream());
+             troubleCodes = troubleCodesCommand.getFormattedResult();
+        }catch(IOException | InterruptedException e){
+            Log.e(TAG,"Failed to get trouble codes",e);
+            return "404f";
+        }
+        return  troubleCodes;
+    }
+
+    public double calculateFuelConsumption() {
         try {
             MassAirFlowCommand mafCommand = new MassAirFlowCommand();
             mafCommand.run(socket.getInputStream(), socket.getOutputStream());
@@ -162,11 +176,11 @@ public class ObdAdapter {
             // Расчёт: топливоподача в литрах/час
             double fuelRateLph = (maf * 3600) / (afr * fuelDensity);
 
-            return String.format(Locale.US, "%.2f L/h", fuelRateLph);
+            return fuelRateLph;
 
         } catch (IOException | InterruptedException e) {
             Log.e(TAG, "Failed to calculate fuel consumption", e);
-            return "Error";
+            return 404;
         }
     }
     public String OilTempCommand(){
@@ -180,23 +194,23 @@ public class ObdAdapter {
         }
     }
 
-    public String getFuelTrim() {
+    public float getFuelTrim() {
         FuelTrimCommand cmd = new FuelTrimCommand();
         try {
             cmd.run(socket.getInputStream(), socket.getOutputStream());
-            return cmd.getFormattedResult(); // Пример: "3.1 %"
+            return cmd.getPercentage(); // Пример: "3.1 %"
         } catch (Exception e) {
-            return "Ошибка: " + e.getMessage();
+            return 404;
         }
     }
 
-    public String getTimingAdvance() {
+    public float getTimingAdvance() {
         TimingAdvanceCommand cmd = new TimingAdvanceCommand();
         try {
             cmd.run(socket.getInputStream(), socket.getOutputStream());
-            return cmd.getFormattedResult(); // Пример: "12.5 °"
+            return cmd.getPercentage(); // Пример: "12.5 °"
         } catch (Exception e) {
-            return "Ошибка: " + e.getMessage();
+            return 404;
         }
     }
     public double calculateMafManual(double rpm, double map, double iat, double engineDisplacementLiters, double ve) {

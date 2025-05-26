@@ -2,8 +2,9 @@ package sys.diag.car.activity;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
+
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
+import static sys.diag.car.common.Utility.NO_IMAGE;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import java.util.Locale;
 
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.UserDto;
@@ -77,13 +79,14 @@ public class CarCreateActivity extends AppCompatActivity {
                 String model = modelCar.getText().toString().trim();
                 String year = yearCar.getText().toString().trim();
                 if(mark.isEmpty()|| model.isEmpty()||year.isEmpty()){
-                    Toast.makeText(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
+                    Toasty.warning(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }
-                carDto=new CarDto(0,mark,model,year,null,NO_IMAGE,currentUser.getId());
+                carDto=new CarDto(0,mark,model,year,null,NO_IMAGE,currentUser.getId(),false);
+                carDto.setServer_id(null);
                 carViewModel.CreateCar(carDto);
                 //openFileChooser();
-                Toast.makeText(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
+                Toasty.success(CarCreateActivity.this, "Автомобиль добавлен", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

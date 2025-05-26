@@ -1,5 +1,8 @@
 package sys.diag.car.activity;
 
+import static sys.diag.car.common.Utility.GUEST;
+import static sys.diag.car.common.Utility.NO_IMAGE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Optional;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import sys.diag.car.R;
 import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
@@ -29,8 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     private AppCompatButton btnLogin;
     private EditText userName;
     private TextInputEditText password;
-    private TextView textRegister;
+    private TextView textRegister,tvLoginGuest;
     private ProgressBar loadingUi;
+
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -47,12 +52,11 @@ public class LoginActivity extends AppCompatActivity {
         userViewModel.getLoginResult().observe(LoginActivity.this,result->{
             if(result.status== Result.Status.SUCCESS){
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                Toast.makeText(LoginActivity.this, "Успех: " + result.message, Toast.LENGTH_SHORT).show();
+                Toasty.success(LoginActivity.this,  result.data.getMessage(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
-                Log.w("TOKEN",result.data.getAccess_token());
             }
             else if(result.status == Result.Status.ERROR){
-                Toast.makeText(LoginActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
+                Toasty.error(LoginActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -67,6 +71,16 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        tvLoginGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Toasty.info(LoginActivity.this, "Выполнен вход как гость: ", Toast.LENGTH_SHORT).show();
+                UserDto guest = new UserDto(9999,GUEST,GUEST,GUEST,NO_IMAGE);
+                userViewModel.guestLogin(guest);
+                startActivity(intent);
+            }
+        });
     }
     private void setUpWidgets(){
         btnLogin = findViewById(R.id.btnLogin);
@@ -74,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.InnereditTextPasswordLogin);
         textRegister = findViewById(R.id.tvMessage2);
         loadingUi  = findViewById(R.id.loading3);
+        tvLoginGuest = findViewById(R.id.tvLoginGuest);
     }
 
 }

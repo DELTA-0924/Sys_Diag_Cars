@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import sys.diag.car.R;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.Result;
@@ -38,11 +39,11 @@ public class RegisterActivity extends AppCompatActivity {
         userViewmodel.getRegisterResult().observe(RegisterActivity.this,result->{
             if(result.status == Result.Status.SUCCESS){
                 Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                Toast.makeText(RegisterActivity.this,  result.data.getMessage().getDetail(), Toast.LENGTH_SHORT).show();
+                Toasty.success(RegisterActivity.this,  result.data.getMessage().getDetail(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
             else if(result.status == Result.Status.ERROR){
-                Toast.makeText(RegisterActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
+                Toasty.error(RegisterActivity.this, "Ошибка: " + result.message, Toast.LENGTH_SHORT).show();
             }
             loadingUI.setVisibility(View.GONE);
         });

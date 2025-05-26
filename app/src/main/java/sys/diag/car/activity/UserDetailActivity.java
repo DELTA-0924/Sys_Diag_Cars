@@ -2,6 +2,7 @@ package sys.diag.car.activity;
 
 import static sys.diag.car.common.DataImageUtil.copyImageToInternalStorage;
 import static sys.diag.car.common.DataImageUtil.deleteImagesByName;
+import static sys.diag.car.common.Utility.NO_IMAGE;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.squareup.picasso.Picasso;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import sys.diag.car.R;
 import sys.diag.car.common.DataImageUtil;
 import sys.diag.car.dto.Result;
@@ -46,18 +48,22 @@ public class UserDetailActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         setUp();
-        userViewModel.getCurrent().observe(this,result-> loadData(result.data));
+        userViewModel.getCurrent().observe(this,result-> {
+            if(result.status == Result.Status.SUCCESS)
+                loadData(result.data);
+        });
         userViewModel.getUserCars().observe(this,cars-> {
-            carCount.setText(String.valueOf(cars.get(0).cars.size()));
+            if(!cars.isEmpty())
+                carCount.setText(String.valueOf(cars.get(0).cars.size()));
         });
 
         carViewModel.getSynchronizeData().observe(this,result->{
             if(result.status == Result.Status.SUCCESS && result.data!=null){
-                Toast.makeText(UserDetailActivity.this, "Синхронизирован", Toast.LENGTH_SHORT).show();
+                Toasty.success(UserDetailActivity.this, "Синхронизирован", Toast.LENGTH_SHORT).show();
                 loadingUi.setVisibility(View.GONE);
             }
             else{
-                Toast.makeText(UserDetailActivity.this, result.message, Toast.LENGTH_SHORT).show();
+                Toasty.error(UserDetailActivity.this, result.message, Toast.LENGTH_SHORT).show();
                 loadingUi.setVisibility(View.GONE);
             }
         });
@@ -74,6 +80,10 @@ public class UserDetailActivity extends AppCompatActivity {
 
                 userViewModel.Logout(userDto);
                 DataImageUtil.deleteAllSavedImages(UserDetailActivity.this);
+                Intent intent = new Intent(UserDetailActivity.this,LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +95,7 @@ public class UserDetailActivity extends AppCompatActivity {
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("BTNSync","CLick");
+
                     carViewModel.synchronizeData(token,UserDetailActivity.this.getFilesDir());
                     loadingUi.setVisibility(View.VISIBLE);
             }
@@ -113,7 +123,7 @@ public class UserDetailActivity extends AppCompatActivity {
    private void loadAvatar(String imagePath){
 
 
-       if( imagePath!=null &&!imagePath.equals("No_Data")) {
+       if( imagePath!=null &&!imagePath.equals(NO_IMAGE)) {
            Picasso.get()
                    .load( "file://"+imagePath)
                    .placeholder(R.drawable.img_place_holder)

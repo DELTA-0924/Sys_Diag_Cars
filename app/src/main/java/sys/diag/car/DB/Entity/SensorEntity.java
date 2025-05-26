@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "sensors",
 foreignKeys = @ForeignKey(entity = CarEntity.class,
-                            parentColumns = "id",
+                            parentColumns = "server_id",
                             childColumns = "car_id",
                             onUpdate = ForeignKey.CASCADE,
                             onDelete = ForeignKey.CASCADE
@@ -18,16 +18,33 @@ public class SensorEntity {
 
     @PrimaryKey(autoGenerate = true)
     private long id ;
-    private String oil_temp;
     private String cool_temp;
     private String RPM;
     private String fuel_rate;
     private String voaltage;
     private String MAF;
     private String IAT;
-    private String MAP;
     private String TPS;
     private String speed;
+    public String timingAdvance;
+    public String fuelTrim;
+
+    public void setTimingAdvance(String timingAdvance) {
+        this.timingAdvance = timingAdvance;
+    }
+
+    public void setFuelTrim(String fuelTrim) {
+        this.fuelTrim = fuelTrim;
+    }
+
+    public String getTimingAdvance() {
+        return timingAdvance;
+    }
+
+    public String getFuelTrim() {
+        return fuelTrim;
+    }
+
     @ColumnInfo(name = "car_id")
     private Long carId;
 
@@ -39,27 +56,28 @@ public class SensorEntity {
         return id;
     }
 
-    public SensorEntity(long id, String oil_temp, String cool_temp, String RPM, String fuel_rate, String voaltage, String MAF, String IAT, String MAP, String TPS, String speed, Long carId) {
+    public SensorEntity(long id, String cool_temp, String RPM, String fuel_rate, String voaltage, String MAF, String IAT, String TPS, String speed,String fuelTrim,String timingAdvance, Long carId) {
         this.id = id;
-        this.oil_temp = oil_temp;
+
         this.cool_temp = cool_temp;
         this.RPM = RPM;
         this.fuel_rate = fuel_rate;
         this.voaltage = voaltage;
         this.MAF = MAF;
         this.IAT = IAT;
-        this.MAP = MAP;
+
         this.TPS = TPS;
+        this.timingAdvance =timingAdvance;
+        this.fuelTrim = fuelTrim;
         this.speed = speed;
         this.carId = carId;
+
     }
 
     @Ignore
     public SensorEntity(){}
 
-    public void setOil_temp(String oil_temp) {
-        this.oil_temp = oil_temp;
-    }
+
 
     public void setCool_temp(String cool_temp) {
         this.cool_temp = cool_temp;
@@ -85,9 +103,6 @@ public class SensorEntity {
         this.IAT = IAT;
     }
 
-    public void setMAP(String MAP) {
-        this.MAP = MAP;
-    }
 
     public void setTPS(String TPS) {
         this.TPS = TPS;
@@ -101,9 +116,6 @@ public class SensorEntity {
         this.carId = carId;
     }
 
-    public String getOil_temp() {
-        return oil_temp;
-    }
 
     public String getCool_temp() {
         return cool_temp;
@@ -129,9 +141,6 @@ public class SensorEntity {
         return IAT;
     }
 
-    public String getMAP() {
-        return MAP;
-    }
 
     public String getTPS() {
         return TPS;

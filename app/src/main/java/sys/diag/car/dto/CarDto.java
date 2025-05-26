@@ -10,6 +10,25 @@ public class CarDto implements Serializable {
     private String issueBroken;
     private String imageUri;
     private long userId;
+    private boolean car_synchronized ;
+
+    public void setCar_synchronized(boolean car_synchronized) {
+        this.car_synchronized = car_synchronized;
+    }
+
+    public boolean isCar_synchronized() {
+        return car_synchronized;
+    }
+
+    public void setServer_id(Long server_id) {
+        this.server_id = server_id;
+    }
+
+    public Long getServer_id() {
+        return server_id;
+    }
+
+    public Long server_id;
 
     public void setUserId(long userId) {
         this.userId = userId;
@@ -19,13 +38,15 @@ public class CarDto implements Serializable {
         return userId;
     }
 
-    public CarDto(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imagePath, long userId) {
+    public CarDto(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imagePath, long userId,boolean car_synchronized) {
         this.id=id;
         this.markCar = markCar;
         this.modelCar = modelCar;
         this.yearRelease = yearRelease;
         this.issueBroken = issueBroken;
         this.imageUri = imagePath;
+
+        this.car_synchronized = car_synchronized;
         this.userId=userId;
     }
 

@@ -45,7 +45,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Register"
+                    android:text="@string/register_title"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="42sp"
@@ -64,7 +64,7 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_btn_login2"
                     android:ems="10"
-                    android:hint="name"
+                    android:hint="@string/name_input_title"
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -114,7 +114,7 @@
                     android:layout_marginEnd="8dp"
 
                     android:ems="10"
-                    android:hint="password"
+                    android:hint="@string/password_title"
 
                     android:textAlignment="center"
                     android:textColorHint="@color/light_gray"
@@ -144,7 +144,7 @@
                     android:layout_marginTop="64dp"
                     android:layout_marginEnd="64dp"
                     android:background="@drawable/bg_btn_login2"
-                    android:text="Register"
+                    android:text="@string/to_register"
                     android:textColor="@color/white"
                     android:textSize="28sp"
 
@@ -160,7 +160,7 @@
                 android:id="@+id/tvMessage1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="I'm already have account"
+                android:text="@string/message_have_account"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:textAlignment="center"
@@ -170,7 +170,7 @@
                 android:id="@+id/tvGoToLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login here"
+                android:text="@string/message_login_here"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp" />

@@ -1,6 +1,8 @@
 package sys.diag.car.adapter;
 
-import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
+
+import static sys.diag.car.common.Utility.NO_IMAGE;
+import static sys.diag.car.common.Utility.NO_PREDICTED;
 
 import android.content.Context;
 import android.util.Log;
@@ -23,7 +25,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private List<CarDto> cardList;
     private  Context context;
     private OnItemClickListener listener;
-    private final String NO_PREDICTED="Не диагностирован";
+
     public CardAdapter(List<CarDto> cardList, Context context) {
         this.cardList = cardList;this.context=context;
     }

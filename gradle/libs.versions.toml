@@ -22,8 +22,11 @@ loggingInterceptor = "5.0.0-alpha.14"
 loadingOveralyVersion = "1.0.2"
 loadingoverlay = "1.0.0"
 obdJavaApi = "1.0"
+toastyVersion = "1.5.2"
+
 
 [libraries]
+toasty = {group = "com.github.GrenderG",name = "Toasty",version.ref = "toastyVersion"}
 obd-java-api = { group = "com.github.pires", name = "obd-java-api", version.ref = "obdJavaApi" }
 testCore={module = "androidx.test:core",version.ref="testCore"}
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

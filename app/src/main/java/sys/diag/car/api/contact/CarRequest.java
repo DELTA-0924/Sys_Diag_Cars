@@ -1,7 +1,12 @@
 package sys.diag.car.api.contact;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CarRequest {
+    @SerializedName("temp_uid")
     private String uid;
+    @SerializedName("uid")
+    private Long server_uid;
     private String user_uid;
     private String car_model;
     private String car_mark;
@@ -9,7 +14,15 @@ public class CarRequest {
     private String IssueBroken;
     private String car_image_path;
 
-    public CarRequest(String id, String user_uid, String car_model, String car_mark, String car_year, String issueBroken, String car_image_path) {
+    public Long getServer_uid() {
+        return server_uid;
+    }
+
+    public void setServer_uid(Long server_uid) {
+        this.server_uid = server_uid;
+    }
+
+    public CarRequest(String id, String user_uid, String car_model, String car_mark, String car_year, String issueBroken, String car_image_path, Long server_uid) {
         this.uid = id;
         this.user_uid = user_uid;
         this.car_model = car_model;
@@ -17,6 +30,7 @@ public class CarRequest {
         this.car_year = car_year;
         this.IssueBroken = issueBroken;
         this.car_image_path = car_image_path;
+        this.server_uid = server_uid;
     }
 
     public void setUid(String uid) {

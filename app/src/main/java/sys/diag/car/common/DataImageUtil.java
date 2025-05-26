@@ -1,5 +1,7 @@
 package sys.diag.car.common;
 
+import static sys.diag.car.common.Utility.NO_IMAGE;
+
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -23,7 +25,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public  class DataImageUtil {
-    public final static String NO_IMAGE = "placeholder";
+
     public static String copyImageToInternalStorage(Uri uri, Context context,String imageFileName) {
 
 
@@ -50,11 +52,14 @@ public  class DataImageUtil {
             URL url = new URL(imageUrl);
             HttpURLConnection connection =(HttpURLConnection)url.openConnection();
             connection.connect();
-            InputStream input = connection.getInputStream();
-            String[] args = imageUrl.split("/");
 
+            String[] args = imageUrl.split("/");
             String fileName = args[args.length - 1];
             Log.w("Image_Name",fileName);
+            if(fileName.equals(NO_IMAGE))
+                return NO_IMAGE;
+            InputStream input = connection.getInputStream();
+
             File file =  new File(filesDir,fileName);
             FileOutputStream writer = new FileOutputStream(file);
             byte[] buffer =new byte[4096];
@@ -72,21 +77,17 @@ public  class DataImageUtil {
 
     }
 
-    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(File internalDir) {
+    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(List<String> carsImage) {
         List<MultipartBody.Part> images = new ArrayList<>();
-
-        File[] files = internalDir.listFiles();
-
-        if (files != null) {
-            for (File file : files) {
+        for(String imgUrl :carsImage) {
+            File file = new File(imgUrl);
                 if (file.isFile() && file.getName().toLowerCase().endsWith(".jpg")) {
                     RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
                     MultipartBody.Part part = MultipartBody.Part.createFormData("images", file.getName(), requestFile);
+                    Log.w("LOAD_IMAGE", file.getName());
                     images.add(part);
                 }
-            }
         }
-
         return images;
     }
 

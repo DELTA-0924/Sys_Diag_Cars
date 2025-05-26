@@ -3,6 +3,8 @@ package sys.diag.car.DB.Entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.util.TableInfo;
 
@@ -12,10 +14,23 @@ import androidx.room.util.TableInfo;
                                     childColumns = "user_id",
                                     onUpdate = ForeignKey.CASCADE,
                                     onDelete = ForeignKey.CASCADE
-        ))
+        ),
+        indices = {@Index(value = {"server_id"},unique = true)}
+)
 public class CarEntity {
     @PrimaryKey(autoGenerate = true)
     private long id;
+    @ColumnInfo(name = "server_id")
+    private Long server_id;
+
+    public void setServer_id(Long server_id) {
+        this.server_id = server_id;
+    }
+
+    public Long getServer_id() {
+        return server_id;
+    }
+
     @ColumnInfo(name="car_mark")
     private String markCar;
     @ColumnInfo(name="car_model")
@@ -47,7 +62,7 @@ public class CarEntity {
     public long getUserId() {
         return userId;
     }
-    public CarEntity(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imageUri,long userId,Boolean _synchronized) {
+    public CarEntity(long id, String markCar, String modelCar, String yearRelease, String issueBroken, String imageUri,long userId,Boolean _synchronized,Long server_id) {
         this.id = id;
         this.markCar = markCar;
         this.modelCar = modelCar;
@@ -56,8 +71,8 @@ public class CarEntity {
         this.imageUri = imageUri;
         this.userId=userId;
         this._synchronized = _synchronized;
+        this.server_id = server_id;
     }
-
 
     public void setId(long id) {
         this.id = id;

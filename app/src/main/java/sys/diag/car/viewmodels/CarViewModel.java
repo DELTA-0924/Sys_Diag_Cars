@@ -11,9 +11,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import sys.diag.car.api.contact.CarSyncResponse;
 import sys.diag.car.api.contact.ResponseContact;
 import sys.diag.car.dto.CarDto;
 import sys.diag.car.dto.Result;
+import sys.diag.car.dto.idMapping;
 import sys.diag.car.repository.CarRepository;
 
 @HiltViewModel
@@ -21,7 +23,8 @@ public class CarViewModel  extends ViewModel {
     private final CarRepository carRepository;
     private final LiveData<List<CarDto>> AllCars;
     private final MutableLiveData<Result<ResponseContact>> responseLoadData =  new MutableLiveData<>();
-    private final MutableLiveData<Result<ResponseContact>> responseSynchronizeData =  new MutableLiveData<>();
+    private final MutableLiveData<Result<CarSyncResponse>> responseSynchronizeData =  new MutableLiveData<>();
+    private final MutableLiveData<Result<idMapping>> responseSendCar =  new MutableLiveData<>();
     @Inject
     public CarViewModel(CarRepository carRepository){
         this.carRepository=carRepository;
@@ -43,7 +46,7 @@ public class CarViewModel  extends ViewModel {
         return responseLoadData;
     }
 
-    public LiveData<Result<ResponseContact>>getSynchronizeData(){
+    public LiveData<Result<CarSyncResponse>>getSynchronizeData(){
         return responseSynchronizeData;
     }
 
@@ -57,5 +60,13 @@ public class CarViewModel  extends ViewModel {
 
     public LiveData<CarDto> getByIdCar(long id){
         return this.carRepository.getById(id);
+    }
+
+    public MutableLiveData<Result<idMapping>> getCarToSendSensors(){
+        return responseSendCar;
+    }
+
+    public void sendCar(CarDto carDto){
+        this.carRepository.sendCarToSendSensors(responseSendCar,carDto);
     }
 }

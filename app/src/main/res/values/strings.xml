@@ -2,5 +2,44 @@
     <string name="app_name">SystemDiagnosticCar</string>
     <string name="bluetooth_button">tern on bluetooth module </string>
     <string name="title_activity_create_car">CreateCarActivity</string>
+    <string name="create_car_profile">Создать профиль</string>
+    <string name="turn_on_bluetooth">Включить BlueTooth</string>
+    <string name="login_title">Войти</string>
+    <string name="password_title">пароль</string>
+    <string name="log_quest_title">Войти как гость</string>
+    <string name="message_to_register">У меня нет аккаунта</string>
+    <string name="message_to_register_here">Зарегестрироваться здесь</string>
+    <string name="message_have_account">Уже есть аккаунт?</string>
+    <string name="message_login_here">Войти здесь</string>
+    <string name="to_register">Зарегестрироваться</string>
+    <string name="mark_car_title">Марка</string>
+    <string name="model_car_title">Модель</string>
+    <string name="release_car_title">Год выпуска</string>
+    <string name="issue_broken_car_title">Причина поломки</string>
+    <string name="sensor_table_header_name">Название датчика</string>
+    <string name="sensor_table_header_value">Значение</string>
+
+    <string name="sensor_oil_temp">Температура масла</string>
+    <string name="sensor_coolant_temp">Температура охлаждающей жидкости</string>
+    <string name="sensor_rpm">Обороты двигателя (RPM)</string>
+    <string name="sensor_fuel_rate">Расход топлива</string>
+    <string name="sensor_voltage">Напряжение генератора</string>
+    <string name="sensor_maf">Расход воздуха (MAF)</string>
+    <string name="sensor_iat">Температура впускного воздуха (IAT)</string>
+    <string name="sensor_map">Давление во впускном коллекторе (MAP)</string>
+    <string name="sensor_tps">Угол открытия дросселя (TPS)</string>
+    <string name="sensor_speed">Скорость автомобиля</string>
+    <string name="sensor_fuel_trim">Коррекция топлива</string>
+    <string name="sensor_ignition_advance">Угол опережения зажигания</string>
+
+    <string name="sensor_value_default">--</string>
+
+
+
+
+    <string name="name_input_title">имя</string>
+    <string name="register_title">Регистрация</string>
+    <string name="guide">Инструкция</string>
     <string name="car_full_name">%1$s %2$s</string>
+
 </resources>

@@ -41,6 +41,10 @@ public class UserViewModel extends ViewModel {
         return this.userRepository.getUser();
     }
 
+    public void guestLogin(UserDto guest){
+        userRepository.create(guest);
+    }
+
     public LiveData<Result<RegisterResponse>>getRegisterResult(){
         return registerResult;
     }

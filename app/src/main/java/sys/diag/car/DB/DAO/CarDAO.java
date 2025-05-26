@@ -8,6 +8,7 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import sys.diag.car.DB.Entity.CarEntity;
+import sys.diag.car.dto.idMapping;
 
 @Dao()
 public interface CarDAO{
@@ -30,6 +31,7 @@ public interface CarDAO{
     LiveData< List<CarEntity>>getCarsForUser(long userId);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CarEntity> cars);
-    @Query("UPDATE cars SET car_synchronized = 1 WHERE id IN (:ids)")
-    void markAsSynchronized(List<Long> ids);
+    @Query("UPDATE cars SET car_synchronized = 1,server_id =:new_id  WHERE id =:temp_id")
+    void markAsSynchronized(long temp_id,long new_id);
+
 }

@@ -1,8 +1,12 @@
 package sys.diag.car.repository;
 
+import static sys.diag.car.common.Utility.NO_PREDICTED;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,7 @@ import retrofit2.Response;
 import sys.diag.car.DB.DAO.SensorDAO;
 import sys.diag.car.DB.Entity.SensorEntity;
 import sys.diag.car.api.ApiService;
+import sys.diag.car.api.contact.PredictionResponse;
 import sys.diag.car.api.contact.ResponseContact;
 import sys.diag.car.api.contact.SensorRequest;
 import sys.diag.car.dto.Result;
@@ -42,6 +47,7 @@ public class SensorRepository {
         executor.execute(()->{
             this.sensorDAO.insert(sensorEntity);
         });
+
     }
 
     public void delete(SensorDto sensorDto){
@@ -74,7 +80,8 @@ public class SensorRepository {
     public SensorEntity getSensorSync(Long carId){
         return this.sensorDAO.getSensorsSync(carId);
     }
-     public void sendData(MutableLiveData<ResponseContact> responseContact,Long carId,String token){
+
+     public void sendData(MutableLiveData<PredictionResponse> responseContact,Long carId){
          ExecutorService executor = Executors.newSingleThreadExecutor();
          Future<SensorEntity>future = executor.submit(()->this.getSensorSync(carId));
         executor.submit(()->{
@@ -84,21 +91,48 @@ public class SensorRepository {
                 SensorRequest sensorRequest = Optional.ofNullable(sensor)
                         .map(this::entityToRequest)
                         .orElse(null);
-                Call<ResponseContact> call =this.apiService.sendDataSensors("Token "+token,sensorRequest);
-                call.enqueue(new Callback<ResponseContact>() {
+                if (sensorRequest == null) {
+                    PredictionResponse response = new PredictionResponse();
+                    response.setDetail("Данные сенсора отсутствуют");
+                    response.setStatus_code("400");
+                    responseContact.postValue(response);
+                    return;
+                }
+                Call<PredictionResponse> call =this.apiService.sendDataSensors(sensorRequest);
+                call.enqueue(new Callback<PredictionResponse>() {
                     @Override
-                    public void onResponse(Call<ResponseContact> call, Response<ResponseContact> response) {
-                        responseContact.postValue(response.body());
+                    public void onResponse(Call<PredictionResponse> call, Response<PredictionResponse> response) {
+                        if(response.isSuccessful())
+                            responseContact.postValue(response.body());
+                        else {
+                            // пробуем считать errorBody
+                            try {
+                                String errorJson = response.errorBody().string();
+                                Gson gson = new Gson();
+                                PredictionResponse errorResponse = gson.fromJson(errorJson, PredictionResponse.class);
+                                // теперь поля будут заполнены
+                                responseContact.postValue(errorResponse);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseContact> call, Throwable throwable) {
-                        responseContact.postValue(new ResponseContact("Ошибка сети",throwable.getMessage()));
+                    public void onFailure(Call<PredictionResponse> call, Throwable throwable) {
+                        PredictionResponse response=  new PredictionResponse();
+                                response.setDetail(throwable.getMessage());
+                                throwable.printStackTrace();
+                                response.setStatus_code("400");
+                        responseContact.postValue(response);
                     }
                 });
 
                 } catch (Exception e) {
-                     responseContact.postValue(new ResponseContact( "Ошибка при чтении БД: ",e.getMessage()));
+                    PredictionResponse response=  new PredictionResponse();
+                    response.setDetail("Ошибка чтения из бд");
+                    response.setStatus_code("404");
+                    responseContact.postValue(response);
                  } finally {
                      executor.shutdown();
                  }
@@ -110,15 +144,17 @@ public class SensorRepository {
     // DTO → Entity
     public SensorEntity dtoToEntity(SensorDto dto) {
         SensorEntity entity = new SensorEntity();
-        entity.setOil_temp(dto.oilTemp);
+
         entity.setCool_temp(dto.coolTemp);
         entity.setRPM(dto.rpm);
         entity.setFuel_rate(dto.fuelRate);
         entity.setVoaltage(dto.voltage);
         entity.setMAF(dto.maf);
         entity.setIAT(dto.iat);
-        entity.setMAP(dto.map);
+
         entity.setTPS(dto.tps);
+        entity.setFuelTrim(dto.fuelTrim);
+        entity.setTimingAdvance(dto.timingAdvance);
         entity.setSpeed(dto.speed);
         entity.setCarId(dto.carId);
         return entity;
@@ -127,16 +163,17 @@ public class SensorRepository {
     // Entity → DTO
     public SensorDto entityToDto(SensorEntity entity) {
         SensorDto dto = new SensorDto();
-        dto.oilTemp = entity.getOil_temp();
+
         dto.coolTemp = entity.getCool_temp();
         dto.rpm = entity.getRPM();
         dto.fuelRate = entity.getFuel_rate();
         dto.voltage = entity.getVoaltage();
         dto.maf = entity.getMAF();
         dto.iat = entity.getIAT();
-        dto.map = entity.getMAP();
         dto.tps = entity.getTPS();
         dto.speed = entity.getSpeed();
+        dto.timingAdvance =entity.getTimingAdvance();
+        dto.fuelTrim =entity.getFuelTrim();
         dto.carId = entity.getCarId();
         return dto;
     }
@@ -144,23 +181,22 @@ public class SensorRepository {
     // Entity → Request (например, для отправки на сервер)
     public SensorRequest entityToRequest(SensorEntity entity) {
         SensorRequest request = new SensorRequest();
-        request.oilTemp = entity.getOil_temp();
-        request.coolTemp = entity.getCool_temp();
+        request.coolant_temp = entity.getCool_temp();
         request.rpm = entity.getRPM();
-        request.fuelRate = entity.getFuel_rate();
-        request.voltage = entity.getVoaltage();
+        request.fuel_consumption = entity.getFuel_rate();
+        request.generator_voltage = entity.getVoaltage();
         request.maf = entity.getMAF();
         request.iat = entity.getIAT();
-        request.map = entity.getMAP();
         request.tps = entity.getTPS();
         request.speed = entity.getSpeed();
+        request.timing_advance = entity.getTimingAdvance();
+        request.short_term_fuel_trim = entity.getFuelTrim();
+        request.car_uid = String.valueOf( entity.getCarId());
         return request;
     }
 
-    // Пример сохранения нового сенсора
-    public void saveSensor(SensorDto dto) {
-        sensorDAO.insert(dtoToEntity(dto));
-    }
+
+
 
 
 

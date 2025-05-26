@@ -1,6 +1,7 @@
 package sys.diag.car.repository;
 
-import static sys.diag.car.common.DataImageUtil.NO_IMAGE;
+
+import static sys.diag.car.common.Utility.NO_IMAGE;
 
 import android.util.Log;
 
