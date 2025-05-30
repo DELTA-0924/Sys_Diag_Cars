@@ -3,7 +3,7 @@
     <string name="bluetooth_button">tern on bluetooth module </string>
     <string name="title_activity_create_car">CreateCarActivity</string>
     <string name="create_car_profile">Создать профиль</string>
-    <string name="turn_on_bluetooth">Включить BlueTooth</string>
+    <string name="turn_on_bluetooth">Подключится в OBDII</string>
     <string name="login_title">Войти</string>
     <string name="password_title">пароль</string>
     <string name="log_quest_title">Войти как гость</string>

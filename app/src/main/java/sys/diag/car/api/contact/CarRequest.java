@@ -11,6 +11,7 @@ public class CarRequest {
     private String car_model;
     private String car_mark;
     private String car_year;
+    @SerializedName("issueBroken")
     private String IssueBroken;
     private String car_image_path;
 

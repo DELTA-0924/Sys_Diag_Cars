@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,8 +62,8 @@ public class CarDetailActivity extends AppCompatActivity {
 
     private CarViewModel carViewModel;
     private SensorViewModel sensorViewModel;
-
-    private AppCompatButton btnBack,btnSendSensors;
+    private ProgressBar loadingSensors;
+    private AppCompatButton btnBack,btnSendSensors,btnDelete;
     private TextView tvMarkCar,tvYearCar,tvIssueBroken,tvKmToFailure;
     private AppCompatButton btnGetSensors;
     private TableLayout tbSensors,tbErrorCodes;
@@ -97,22 +98,23 @@ public class CarDetailActivity extends AppCompatActivity {
             selectedCar=(CarDto)getIntent().getSerializableExtra("selectedCar");
 
             carViewModel.getByIdCar(selectedCar.getId()).observe(this,car-> {
-                tvMarkCar.setText(car.getMarkCar());
-                tvYearCar.setText(car.getYearRelease());
-                tvIssueBroken.setText(car.getIssueBroken() == null ? NO_PREDICTED : car.getIssueBroken());
-                String imagePath = car.getImageUri();
-                if( imagePath!=null &&!imagePath.equals(NO_IMAGE)) {
-                    Log.e("LOAD_IMAGE",imagePath);
-                    Picasso.get()
-                            .load( "file://"+imagePath) // Здесь вызывайте метод, который возвращает URL изображения
-                            .placeholder(R.drawable.img_place_holder) // Заглушка, показываемая во время загрузки изображения
-                            .error(R.drawable.img_error) // Заглушка, показываемая в случае ошибки загрузки
-                            .into(ivCar);
-                }
-                else if(imagePath==null){
-                    Picasso.get()
-                            .load(R.drawable.img_place_holder)
-                            .into(ivCar);
+                if(car!=null) {
+                    tvMarkCar.setText(car.getMarkCar());
+                    tvYearCar.setText(car.getYearRelease());
+                    tvIssueBroken.setText(car.getIssueBroken() == null ? NO_PREDICTED : car.getIssueBroken());
+                    String imagePath = car.getImageUri();
+                    if (imagePath != null && !imagePath.equals(NO_IMAGE)) {
+                        Log.e("LOAD_IMAGE", imagePath);
+                        Picasso.get()
+                                .load("file://" + imagePath) // Здесь вызывайте метод, который возвращает URL изображения
+                                .placeholder(R.drawable.img_place_holder) // Заглушка, показываемая во время загрузки изображения
+                                .error(R.drawable.img_error) // Заглушка, показываемая в случае ошибки загрузки
+                                .into(ivCar);
+                    } else if (imagePath == null) {
+                        Picasso.get()
+                                .load(R.drawable.img_place_holder)
+                                .into(ivCar);
+                    }
                 }
             });
         }
@@ -126,10 +128,11 @@ public class CarDetailActivity extends AppCompatActivity {
         });
 
         sensorViewModel.getSendSensorsResult().observe(this,response->{
+            loadingSensors.setVisibility(View.GONE);
             if(response.getStatus_code().equals("car_not_found"))
                 Toasty.error(CarDetailActivity.this, response.getDetail(), Toasty.LENGTH_SHORT).show();
             else if(response.getStatus_code().equals("400")){
-                Toasty.success(CarDetailActivity.this, response.getDetail(), Toasty.LENGTH_SHORT).show();
+                Toasty.error(CarDetailActivity.this, response.getDetail(), Toasty.LENGTH_SHORT).show();
             }
             else {
                 tvIssueBroken.setText(response.getIssue_broken());
@@ -145,8 +148,10 @@ public class CarDetailActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
             if (result.status == Result.Status.SUCCESS) {
-                selectedCar.setCar_synchronized(true);
+                Log.w("Sensor car id send",String.valueOf(sensorDto.getCarId()));
+                Log.w(" car id send",String.valueOf(selectedCar.server_id));
                 selectedCar.setServer_id(result.data.getNew_id());
+
                sensorDto.setCarId(result.data.getNew_id());
                 sensorViewModel.exctractSensors(sensorDto);
                 sensorViewModel.sendSensors(result.data.getNew_id());
@@ -161,6 +166,15 @@ public class CarDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                carViewModel.deleteCar(selectedCar);
+                finish();
+            }
+        });
+
         ivCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,24 +187,28 @@ public class CarDetailActivity extends AppCompatActivity {
 
                 v.setVisibility(View.GONE);
 
-//                try{
-//
-//                    obdAdapter.initializeObdProtocol();
-//                } catch (InterruptedException e){
-//                    Toasty.error(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
-//                }
-//                catch (IOException e){
-//                    Toasty.error(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
-//                }
-//                catch (NullPointerException e){
-//                    Toasty.error(CarDetailActivity.this,e.getMessage(),LENGTH_SHORT).show();
-//                }
+
+                try{
+
+                    obdAdapter.initializeObdProtocol();
+                    extractSensorsFromObd();
+                } catch (InterruptedException e){
+                    Toasty.error(CarDetailActivity.this,"Проблемы с соединением адаптера",LENGTH_SHORT).show();
+                }
+                catch (IOException e){
+                    Toasty.error(CarDetailActivity.this,"Адаптер не подключен ",LENGTH_SHORT).show();
+                    generateRandomSensorDto();
+                }
+                catch (NullPointerException e){
+                    Toasty.error(CarDetailActivity.this,"Проблемы с соединением адаптера",LENGTH_SHORT).show();
+                    generateRandomSensorDto();
+                }
                 tbSensors.setVisibility(View.VISIBLE);
                 tbErrorCodes.setVisibility(View.VISIBLE);
                 divide1.setVisibility(View.VISIBLE);
                 divide2.setVisibility(View.VISIBLE);
-                //extractSensorsFromObd();
-                generateRandomSensorDto();
+
+
                 btnSendSensors.setVisibility(View.VISIBLE);
             }
         });
@@ -198,14 +216,15 @@ public class CarDetailActivity extends AppCompatActivity {
         btnSendSensors.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                loadingSensors.setVisibility(View.VISIBLE);
                 sensorDto = saveSensors();
                 if(!selectedCar.isCar_synchronized()) {
                     carViewModel.sendCar(selectedCar);
                 }
                 else {
+                    sensorDto.setCarId(selectedCar.getServer_id());
                     sensorViewModel.exctractSensors(sensorDto);
                     sensorViewModel.sendSensors(selectedCar.getServer_id());
-                    Log.e("Server Id Car", String.valueOf(selectedCar.getServer_id()));
                 }
             }
 
@@ -221,13 +240,13 @@ public class CarDetailActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            if(!selectedCar.getImageUri().equals(NO_IMAGE))
+            if( selectedCar.getImageUri()!=null && !selectedCar.getImageUri().equals(NO_IMAGE))
                 deleteImagesByName(CarDetailActivity.this,selectedCar.getImageUri());
             String imageFileName = selectedCar.getId()+"_Car"+System.currentTimeMillis()+".jpg";
             String internalPath=copyImageToInternalStorage(imageUri,CarDetailActivity.this,imageFileName);
 
             selectedCar.setImageUri(internalPath);
-            Log.e("IMAGE_CAR",selectedCar.getImageUri());
+            selectedCar.setCar_synchronized(false);
             try {
                 carViewModel.updateCar(selectedCar);
 
@@ -251,7 +270,9 @@ public class CarDetailActivity extends AppCompatActivity {
         divide1 = findViewById(R.id.view3);
         divide2 = findViewById(R.id.view4);
         btnSendSensors = findViewById(R.id.btnSendSensors);
+        btnDelete = findViewById(R.id.btnDelete);
         SensorsList= new ArrayList<String>();
+        loadingSensors = findViewById(R.id.loading5);
     }
 
 
@@ -336,6 +357,7 @@ public class CarDetailActivity extends AppCompatActivity {
             }
             i++;
         }
+
 //        String TroubleCode = obdAdapter.TroubleCode();
 //        Toasty.info(this,"Код ошибок"+TroubleCode,Toasty.LENGTH_LONG).show();
     }
@@ -360,6 +382,7 @@ public class CarDetailActivity extends AppCompatActivity {
             }
             i++;
         }
+
     }
     private SensorDto saveSensors(){
         if(!SensorsList.isEmpty()) {

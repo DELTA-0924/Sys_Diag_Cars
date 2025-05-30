@@ -95,6 +95,10 @@ public class CarRepository {
                 .orElse(null);
         executor.execute(()-> this.carDAO.delete(carEntity));
     }
+    public void deleteAllCars(){
+
+        executor.execute(()-> this.carDAO.deleteAll());
+    }
     private void setSyncFlag(List<idMapping>ids){
 
         for(idMapping id:ids) {
@@ -114,14 +118,10 @@ public class CarRepository {
                         .stream()
                         .filter(car->!car.get_synchronized())
                         .collect(Collectors.toList());
-                List<Long> carsId = carEntities.stream()
-                        .filter(car->!car.get_synchronized())
-                        .map(carEntity -> carEntity.getId())
-                        .collect(Collectors.toList());
 
                 List<String> carsImage = carEntities.stream()
                         .filter(car->!car.get_synchronized())
-                        .map(carEntity -> carEntity.getImageUri())
+                        .map(CarEntity::getImageUri)
                         .collect(Collectors.toList());
 
                 for(CarEntity car :carEntities){
@@ -133,7 +133,7 @@ public class CarRepository {
                         .collect(Collectors.toList());
 
                 Call<CarSyncResponse> call = apiService.synchronizeData("Bearer " + token, carRequest);
-                List<MultipartBody.Part> parts =DataImageUtil.getAllJpgImagesFromInternalStorage(carsImage);;
+
 
                 call.enqueue(new Callback<CarSyncResponse>() {
                     @Override
@@ -141,6 +141,7 @@ public class CarRepository {
                         if (response.isSuccessful()) {
                             setSyncFlag(response.body().getIds());
                             liveResponse.postValue(Result.success(response.body()));
+                            loadImage(token,liveResponse,response.body().getIds(),internalDir);
 
                         } else {
                             try {
@@ -161,32 +162,6 @@ public class CarRepository {
                         throwable.printStackTrace();
                     }
                 });
-                if(!parts.isEmpty()) {
-                    Call<CarSyncResponse> call2 = apiService.uploadImage("Bearer " + token, parts);
-                    call2.enqueue(new Callback<CarSyncResponse>() {
-                        @Override
-                        public void onResponse(Call<CarSyncResponse> call, Response<CarSyncResponse> response) {
-                            if (response.isSuccessful()) {
-                                liveResponse.postValue(Result.success(response.body()));
-
-                            } else {
-                                try {
-                                    Gson gson = new Gson();
-                                    String errorJson = response.errorBody().string();
-                                    CarSyncResponse carSyncResponse= gson.fromJson( errorJson,CarSyncResponse.class);
-                                    liveResponse.postValue(Result.error("Ошибка синхронизации " + carSyncResponse.getDetail(), null));
-                                }catch(IOException e){
-                                    liveResponse.postValue(Result.error("Ошибка синхронизации " + e.getMessage(), null));
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<CarSyncResponse> call, Throwable throwable) {
-                            liveResponse.postValue(Result.error("Ошибка сети " + throwable.getMessage(), null));
-                        }
-                    });
-                }
 
 
             } catch (Exception e) {
@@ -197,7 +172,38 @@ public class CarRepository {
         });
 
     }
+    private void loadImage(String token , MutableLiveData<Result<CarSyncResponse>> liveResponse,List<idMapping> ids, File internalDir){
+        List<MultipartBody.Part> parts =DataImageUtil.getAllJpgImagesFromInternalStorage(ids,internalDir);
+        if(!parts.isEmpty()) {
+            Call<CarSyncResponse> call2 = apiService.uploadImage("Bearer " + token, parts);
+            call2.enqueue(new Callback<CarSyncResponse>() {
+                @Override
+                public void onResponse(Call<CarSyncResponse> call, Response<CarSyncResponse> response) {
+                    if (response.isSuccessful()) {
+                        liveResponse.postValue(Result.success(response.body()));
 
+                    } else {
+                        try {
+                            Gson gson = new Gson();
+                            String errorJson = response.errorBody().string();
+                            CarSyncResponse carSyncResponse= gson.fromJson( errorJson,CarSyncResponse.class);
+                            liveResponse.postValue(Result.error("Ошибка синхронизации " + carSyncResponse.getDetail(), null));
+                        }catch(IOException e){
+                            liveResponse.postValue(Result.error("Ошибка синхронизации " + e.getMessage(), null));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CarSyncResponse> call, Throwable throwable) {
+                    liveResponse.postValue(Result.error("Ошибка сети " + throwable.getMessage(), null));
+                }
+            });
+        }else{
+            Log.e("CAR_IMAGE_LOAD","Картинки не найденв");
+        }
+
+    }
 
 
     public void loadData(String token, MutableLiveData<Result<ResponseContact>> cars, File fileDir){
@@ -229,7 +235,7 @@ public class CarRepository {
     public void sendCarToSendSensors(MutableLiveData<Result<idMapping>>responseContact,CarDto carDto){
         CarEntity carEntity = Optional.ofNullable(carDto).map(this::convertToCarEntity).orElse(null);
         CarRequest carRequest = Optional.ofNullable(carEntity).map(this::convertToCarRequestfromCarEntity).orElse(null);
-        carRequest.setCar_image_path(NO_IMAGE);
+
         Call<idMapping>call =apiService.createCarToSendSensors(carRequest);
         call.enqueue(new Callback<idMapping>() {
             @Override
@@ -237,7 +243,7 @@ public class CarRepository {
                 if(response.isSuccessful())
                 {
 
-                    carEntity.set_synchronized(true);
+
                     carEntity.setServer_id(response.body().getNew_id());
                     Log.w("SERVER_ID", String.valueOf(carEntity.getServer_id()));
                     update(carEntity);

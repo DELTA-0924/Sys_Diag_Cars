@@ -20,16 +20,45 @@
             android:background="@drawable/bg_color_gradient"
             android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/loading5"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/BaseInfo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/BaseInfo"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+                />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDelete"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/delete_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnBackDetail"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnBackDetail"
                     style="@android:style/Widget.Button"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/left_arrow"
                     app:layout_constraintStart_toStartOf="parent"

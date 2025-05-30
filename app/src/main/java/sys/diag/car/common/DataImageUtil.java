@@ -23,6 +23,7 @@ import java.net.URL;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import sys.diag.car.dto.idMapping;
 
 public  class DataImageUtil {
 
@@ -76,20 +77,41 @@ public  class DataImageUtil {
         }
 
     }
-
-    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(List<String> carsImage) {
+    public static List<MultipartBody.Part> getAllJpgImagesFromInternalStorage(List<idMapping> ids, File internalDir) {
         List<MultipartBody.Part> images = new ArrayList<>();
-        for(String imgUrl :carsImage) {
-            File file = new File(imgUrl);
-                if (file.isFile() && file.getName().toLowerCase().endsWith(".jpg")) {
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-                    MultipartBody.Part part = MultipartBody.Part.createFormData("images", file.getName(), requestFile);
-                    Log.w("LOAD_IMAGE", file.getName());
-                    images.add(part);
+        File[] files = internalDir.listFiles();
+
+        if (files == null) return images;
+
+        for (File file : files) {
+            if (!file.isFile() || !file.getName().toLowerCase().endsWith(".jpg")) continue;
+
+            for (idMapping imgId : ids) {
+                String tempIdStr = imgId.getTemp_id().toString();
+                String newIdStr = imgId.getNew_id().toString();
+
+                if (file.getName().contains(tempIdStr)) {
+                    String newName = file.getName().replaceFirst(tempIdStr, newIdStr);
+                    File newFile = new File(internalDir, newName);
+
+                    if (file.renameTo(newFile)) {
+                        Log.w("NEW_FILE_NAME", newFile.getName());
+                        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), newFile);
+                        MultipartBody.Part part = MultipartBody.Part.createFormData("images", newFile.getName(), requestFile);
+                        Log.w("LOAD_IMAGE", newFile.getName());
+                        images.add(part);
+                    } else {
+                        Log.e("FILE_RENAME_ERROR", "Failed to rename: " + file.getName());
+                    }
+
+                    break;
                 }
+            }
         }
+
         return images;
     }
+
 
 
     public static void deleteAllSavedImages(Context context) {

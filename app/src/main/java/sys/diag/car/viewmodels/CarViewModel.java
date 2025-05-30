@@ -42,6 +42,10 @@ public class CarViewModel  extends ViewModel {
     public void deleteCar(CarDto carDto){
         this.carRepository.delete(carDto);
     }
+    public void deleteAllCars(){
+        this.carRepository.deleteAllCars();
+    }
+
     public LiveData<Result<ResponseContact>> getLoadData(){
         return responseLoadData;
     }

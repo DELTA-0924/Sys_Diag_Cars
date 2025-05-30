@@ -19,7 +19,7 @@ public interface CarDAO{
     @Delete
     void delete(CarEntity car);
     @Query("DELETE FROM cars")
-    void deleteAllUsers();
+    void deleteAll();
 
     @Query("SELECT * FROM cars ")
     LiveData<List<CarEntity>> getAllCar();

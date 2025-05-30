@@ -104,7 +104,7 @@ public class AppModule {
     @Singleton
     public static Retrofit provideRetrofit(OkHttpClient client) {
         return new Retrofit.Builder()
-                .baseUrl("http://192.168.1.5:8000/api/v1/") // ← замени на свою
+                .baseUrl("http://192.168.1.4:8000/api/v1/") // ← замени на свою
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
