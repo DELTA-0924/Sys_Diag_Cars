@@ -79,6 +79,11 @@ public class CarCreateActivity extends AppCompatActivity {
                 String model = modelCar.getText().toString().trim();
                 String year = yearCar.getText().toString().trim();
                 if(mark.isEmpty()|| model.isEmpty()||year.isEmpty()){
+                    try{
+                        int yearConverted = Integer.parseInt(year);
+                    }catch (NumberFormatException e){
+                        Toasty.warning(CarCreateActivity.this,"Поле год выпуска не валиден",LENGTH_LONG).show();
+                    }
                     Toasty.warning(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
                 }

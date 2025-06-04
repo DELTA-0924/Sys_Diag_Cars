@@ -106,7 +106,7 @@ public class UserDetailActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack2);
         btnSync = findViewById(R.id.btnSync);
         avatar = findViewById(R.id.ivAvatars);
-        joinDate = findViewById(R.id.tvJoinDateValue);
+
         carCount = findViewById(R.id.tvCarCountValue);
         userName = findViewById(R.id.tvName);
         email = findViewById(R.id.tvEmail);

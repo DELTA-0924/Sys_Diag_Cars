@@ -142,6 +142,7 @@ public class CarDetailActivity extends AppCompatActivity {
         });
 
         carViewModel.getCarToSendSensors().observe(CarDetailActivity.this, result -> {
+            loadingSensors.setVisibility(View.GONE);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -155,6 +156,7 @@ public class CarDetailActivity extends AppCompatActivity {
                sensorDto.setCarId(result.data.getNew_id());
                 sensorViewModel.exctractSensors(sensorDto);
                 sensorViewModel.sendSensors(result.data.getNew_id());
+                loadingSensors.setVisibility(View.VISIBLE);
             } else {
                 Toasty.error(CarDetailActivity.this, result.message, Toasty.LENGTH_SHORT).show();
             }

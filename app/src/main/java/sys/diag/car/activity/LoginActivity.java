@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             if(result.status== Result.Status.SUCCESS){
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 Toasty.success(LoginActivity.this,  result.data.getMessage(), Toast.LENGTH_SHORT).show();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
             else if(result.status == Result.Status.ERROR){

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private UserViewModel userViewModel;
-    private AppCompatButton btnCreateCar,btnOnBlueTooth;
+    private AppCompatButton btnCreateCar,btnOnBlueTooth,btnOnGuid;
     CardAdapter adapter;
     private ViewPager2 viewPager;
     private ProgressBar loadingUi;
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         carViewModel.getLoadData().observe(this,result->{
             if(result.status == Result.Status.ERROR && result.data==null)
-                Toasty.warning(this,result.message, LENGTH_LONG).show();
+                Toasty.warning(this,result.message, Toasty.LENGTH_SHORT).show();
             loadingUi.setVisibility(View.GONE);
         });
         setUp();
@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
                     createCarLauncher.launch(intent);
                 }else {
 
-                    Toasty.info(MainActivity.this,"Для входа личный кабинет авторизуйтесь",Toasty.LENGTH_LONG).show();
-                    Toasty.info(MainActivity.this,"Удерживайте картинку что бы авторизоваться",Toasty.LENGTH_LONG).show();
+                    Toasty.info(MainActivity.this,"Для входа личный кабинет авторизуйтесь",Toasty.LENGTH_SHORT).show();
+                    Toasty.info(MainActivity.this,"Удерживайте картинку что бы авторизоваться",Toasty.LENGTH_SHORT).show();
                 }
             }
         });
@@ -174,7 +174,12 @@ public class MainActivity extends AppCompatActivity {
                 loadingUi.setVisibility(View.VISIBLE);
             }
         });
-
+        btnOnGuid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createCarLauncher.launch(new Intent(MainActivity.this,GuideActivity.class));
+            }
+        });
     }
 
     private void setUp(){
@@ -183,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
         mainIocn=findViewById(R.id.imageView);
         loadingUi=findViewById(R.id.loading1);
         btnOnBlueTooth=findViewById(R.id.btnOnBluewTooth);
+        btnOnGuid=findViewById(R.id.btnOnGuid);
+
     }
     private final ActivityResultLauncher<Intent> createCarLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -203,26 +210,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         blueToothConnection.findObdDevice(OBD_II);
-            blueToothConnection.connectToObdDevice(new SocketCallback() {
-            @Override
-            public void onSocketReady(BluetoothSocket socket) {
-                runOnUiThread(() -> {
+        blueToothConnection.connectToObdDevice(new SocketCallback() {
+        @Override
+        public void onSocketReady(BluetoothSocket socket) {
+            runOnUiThread(() -> {
 
-                    Toasty.success(MainActivity.this,"Соединение установлено",Toasty.LENGTH_LONG).show();
-                    loadingUi.setVisibility(View.GONE);
-                    obdSession.setSocket(socket);
-                });
-            }
+                Toasty.success(MainActivity.this,"Соединение установлено",Toasty.LENGTH_SHORT).show();
+                loadingUi.setVisibility(View.GONE);
+                obdSession.setSocket(socket);
+            });
+        }
 
-            @Override
-            public void onError(Exception e) {
-                runOnUiThread(()->{
+        @Override
+        public void onError(Exception e) {
+            runOnUiThread(()->{
 
-                    Toasty.warning(MainActivity.this,"Failed to connect to OBD device",Toasty.LENGTH_LONG).show();
-                    loadingUi.setVisibility(View.GONE);
-                });
-            }
-        });
+                Toasty.warning(MainActivity.this,"Failed to connect to OBD device,Включите bluetooth",Toasty.LENGTH_LONG).show();
+                loadingUi.setVisibility(View.GONE);
+            });
+        }
+    });
 
 
 

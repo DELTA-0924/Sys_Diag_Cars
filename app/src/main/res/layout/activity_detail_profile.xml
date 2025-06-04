@@ -32,10 +32,10 @@
                     android:id="@+id/btnBack2"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="363dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
                     android:background="@drawable/left_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -95,72 +95,54 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout4"
                 android:layout_width="0dp"
-                android:layout_height="650dp"
+                android:layout_height="500dp"
                 android:layout_marginTop="32dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="1.0">
 
                 <LinearLayout
                     android:id="@+id/lnStats"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:orientation="vertical"
+                    android:layout_marginEnd="24dp"
+                    android:orientation="horizontal"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/tvJoinDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Дата регистрации аккаунта"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <TextView
                         android:id="@+id/tvCarCount"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Кол-во машин"
                         android:textColor="@color/white"
+                        android:layout_marginEnd="100dp"
                         android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginEnd="32dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/lnStats"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/tvJoinDateValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="00.00.0000"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
                     <TextView
                         android:id="@+id/tvCarCountValue"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:layout_marginStart="100dp"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
-
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/lnStats"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                </View>
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLogout"
                     android:layout_width="0dp"
@@ -180,13 +162,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="32dp"
                     android:background="@drawable/bg_btn_login2"
                     android:text="Синхронизировать данные"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/btnLogout"
                     app:layout_constraintEnd_toEndOf="parent"
 
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ProgressBar
