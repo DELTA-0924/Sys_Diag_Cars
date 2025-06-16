@@ -33,7 +33,9 @@ import java.util.Locale;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import sys.diag.car.R;
+import sys.diag.car.common.Utility;
 import sys.diag.car.dto.CarDto;
+import sys.diag.car.dto.Result;
 import sys.diag.car.dto.UserDto;
 import sys.diag.car.viewmodels.CarViewModel;
 import sys.diag.car.viewmodels.UserViewModel;
@@ -86,6 +88,11 @@ public class CarCreateActivity extends AppCompatActivity {
                     }
                     Toasty.warning(CarCreateActivity.this,"Поля должны быть заполнеными",LENGTH_LONG).show();
                     return ;
+                }
+                Result<Boolean> result = Utility.validate_input_data(mark,model,year);
+                if(result.status == Result.Status.ERROR){
+                    Toasty.warning(CarCreateActivity.this,result.message,LENGTH_LONG).show();
+                    return;
                 }
                 carDto=new CarDto(0,mark,model,year,null,NO_IMAGE,currentUser.getId(),false);
                 carDto.setServer_id(null);
